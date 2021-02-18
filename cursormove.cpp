@@ -37,6 +37,7 @@ int main()
 		SetFocus(window);
 		
 		SetCursorPos(rect.left + 50 , rect.bottom - 200 );
+        Sleep(10);
 		LeftDown();
 		for (int x = 0; x < 700; x+=5)
 		{
