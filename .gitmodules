@@ -1,0 +1,3 @@
+[submodule "cpp-robot"]
+	path = cpp-robot
+	url = git@github.com:dante-erik/cpp-robot.git
