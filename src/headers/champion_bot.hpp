@@ -2,12 +2,16 @@
 
 #include "bot.hpp"
 
-class champion_bot : protected bot
+#define pure = 0
+
+class champion_bot : public bot
 {
 private:
 protected:
+    virtual DWORD run() pure;
 public:
     champion_bot();
     virtual ~champion_bot();
-    virtual HANDLE start();
 };
+
+#undef pure

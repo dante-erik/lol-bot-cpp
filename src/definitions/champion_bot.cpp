@@ -1,3 +1,4 @@
-#include "../headers/client_bot.hpp"
+#include "../headers/champion_bot.hpp"
 
-client_bot::client_bot() = default;
+champion_bot::champion_bot() = default;
+champion_bot::~champion_bot() = default;

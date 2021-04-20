@@ -1,3 +1,6 @@
-#include "../headers/champion_bot.hpp"
+#include "../headers/client_bot.hpp"
 
-champion_bot::champion_bot() = default;
+client_bot::client_bot() = default;
+client_bot::~client_bot() = default;
+
+DWORD client_bot::run() { return 0; }
