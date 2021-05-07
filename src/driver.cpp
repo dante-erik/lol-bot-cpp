@@ -11,6 +11,8 @@
 // Gives control data struct used in shell
 #include "headers/control.hpp"
 
+#define seconds *1000
+
 std::string HandleArgument(int &arg, char *argv[]);
 bool MatchArgument(int &arg, char *argv[], std::string const &argument);
 std::string &HandleArgumentWithPrefix(int &arg, char *argv[], std::string const &prefix, std::string &argument);
@@ -90,7 +92,6 @@ int main(int argc, char *argv[])
 
     data.client_bot = new client_bot();
 
-    // std::cout << "Creating " << data.champion_name << " Bot...";
     // Sleep(2500);
     switch (data.champion)
     {
@@ -102,7 +103,6 @@ int main(int argc, char *argv[])
         std::cerr << "failed\nChampion \"" << data.champion_name << "\" does not have a rule to be constructed in the driver." << std::endl;
         return 3;
     }
-    // std::cout << "done" << std::endl;
 
     // std::cout << argc << std::endl;
     // std::cout << argv[0] << std::endl;

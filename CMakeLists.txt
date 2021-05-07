@@ -13,4 +13,6 @@ list(TRANSFORM CHAMPION_FILES PREPEND "src/definitions/champions/")
 list(TRANSFORM DEFINITION_FILES PREPEND "src/definitions/")
 list(TRANSFORM SRC_FILES PREPEND "src/")
 
+message("${SRC_FILES}" "${DEFINITION_FILES}" "${CHAMPION_FILES}")
+
 add_executable(lolbot "${SRC_FILES}" "${DEFINITION_FILES}" "${CHAMPION_FILES}")

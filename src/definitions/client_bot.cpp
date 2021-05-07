@@ -1,6 +1,14 @@
+#include <iostream>
 #include "../headers/client_bot.hpp"
 
-client_bot::client_bot() : bot() {}
+#define seconds *1000
+
+client_bot::client_bot() : bot{} { }
 client_bot::~client_bot() = default;
 
-DWORD client_bot::run() { return 0; }
+DWORD client_bot::run() {
+    std::cout << "Client Bot Running" << std::endl;
+    Sleep(5 seconds);
+    std::cout << "Client Bot Done" << std::endl;
+    return 0;
+}
