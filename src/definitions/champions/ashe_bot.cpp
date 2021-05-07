@@ -4,7 +4,7 @@
 
 #define seconds *1000
 
-ashe_bot::ashe_bot() = default;
+ashe_bot::ashe_bot() : champion_bot{"Ashe"} {}
 ashe_bot::~ashe_bot() = default;
 
 DWORD ashe_bot::run() {

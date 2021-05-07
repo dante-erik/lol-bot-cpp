@@ -352,3 +352,6 @@ MigrationBackup/
 
 # Vs Code settings
 .vscode/
+
+# Build
+build

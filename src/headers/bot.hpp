@@ -7,7 +7,12 @@
 class bot : protected Robot
 {
 public:
-    enum class status;
+    enum class status
+    {
+        SUSPENDED,
+        RUNNING,
+        COMPLETED
+    };
 
 private:
     status Status;
@@ -21,7 +26,7 @@ public:
     bot();
     virtual ~bot();
     const void start();
-    const void stop();
+    const void stop(status stat = status::SUSPENDED);
     virtual status const &get_Status() const;
     const HANDLE get_hThread() const;
     HANDLE get_hThread();
@@ -30,11 +35,6 @@ public:
     friend DWORD WINAPI run(LPVOID lpParam);
 };
 
-enum class bot::status
-{
-    WAITING,
-    RUNNING,
-    STOPPED
-};
+
 
 #undef pure

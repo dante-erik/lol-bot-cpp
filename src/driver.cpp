@@ -4,89 +4,131 @@
 #include "headers/bots.hpp"
 // Gives the different champion bot implementations
 #include "headers/champions.hpp"
+// Gives the shell that users can use to command the driver
+#include "headers/shell.hpp"
+// Gives string modifiers like stolower and stopretty
+#include "headers/string_modifiers.hpp"
+// Gives control data struct used in shell
+#include "headers/control.hpp"
 
-char *HandleArgument(int &arg, char *argv[]);
-bool MatchArgument(int &arg, char *argv[], const char* argument);
-char *HandleArgumentWithPrefix(int &arg, char *argv[], const char *prefix, char *&argument);
+std::string HandleArgument(int &arg, char *argv[]);
+bool MatchArgument(int &arg, char *argv[], std::string const &argument);
+std::string &HandleArgumentWithPrefix(int &arg, char *argv[], std::string const &prefix, std::string &argument);
 
 int main(int argc, char *argv[])
 {
-    constexpr char* default_champion_name = "Ashe";
-    constexpr char* default_client_window_class = "RCLIENT";
-    constexpr char* default_client_window_description = "League of Legends";
-    constexpr char* default_game_window_class = "RiotWindowClass";
-    constexpr char* default_game_window_description = "League of Legends (TM) Client";
-    char *champion_name = default_champion_name;
-    char *client_window_class = "RCLIENT";
-    char *client_window_description = "League of Legends";
-    char *game_window_class = "RiotWindowClass";
-    char *game_window_description = "League of Legends (TM) Client";
+    const std::string default_champion_name{"Ashe"};
+    const std::string default_client_window_class{"RCLIENT"};
+    const std::string default_client_window_description{"League of Legends"};
+    const std::string default_game_window_class{"RiotWindowClass"};
+    const std::string default_game_window_description{"League of Legends (TM) Client"};
+    ControlData data{
+        default_champion_name,
+        default_client_window_class,
+        default_client_window_description,
+        default_game_window_class,
+        default_game_window_description,
+        gameplay::champion::INVALID,
+        gameplay::role::NONE,
+        nullptr,
+        nullptr};
     int i = 1;
-    while(i < argc) {
+    while (i < argc)
+    {
         int j = i;
-        HandleArgumentWithPrefix(i, argv, "-champion", champion_name);
-        if(i != j) continue;
-        HandleArgumentWithPrefix(i, argv, "-clientwc", client_window_class);
-        if(i != j) continue;
-        HandleArgumentWithPrefix(i, argv, "-clientwd", client_window_description);
-        if(i != j) continue;
-        HandleArgumentWithPrefix(i, argv, "-gamewc", game_window_class);
-        if(i != j) continue;
-        HandleArgumentWithPrefix(i, argv, "-gamewd", game_window_description);
-        if(i != j) continue;
-        if(MatchArgument(i, argv, "-h") || MatchArgument(i, argv, "-help") || MatchArgument(i, argv, "help") || MatchArgument(i, argv, "h")) {
+        HandleArgumentWithPrefix(i, argv, "-champion", data.champion_name);
+        if (i != j)
+            continue;
+        HandleArgumentWithPrefix(i, argv, "-clientwc", data.client_window_class);
+        if (i != j)
+            continue;
+        HandleArgumentWithPrefix(i, argv, "-clientwd", data.client_window_description);
+        if (i != j)
+            continue;
+        HandleArgumentWithPrefix(i, argv, "-gamewc", data.game_window_class);
+        if (i != j)
+            continue;
+        HandleArgumentWithPrefix(i, argv, "-gamewd", data.game_window_description);
+        if (i != j)
+            continue;
+        if (MatchArgument(i, argv, "-h") || MatchArgument(i, argv, "-help") || MatchArgument(i, argv, "help") || MatchArgument(i, argv, "h"))
+        {
             std::cout << "Usage " << argv[0] << ":\n"
-            << "\t-champion: Sets the champion name (default: \"" << default_champion_name << "\")\n"
-            << "\t-clientwc: Sets the client's WINDOW_CLASS (default: \"" << default_client_window_class << "\")\n"
-            << "\t-clientwd: Sets the client's Window Description (default: \"" << default_client_window_description << "\")\n"
-            << "\t-gamewc: Sets the game's WINDOW_CLASS (default: \"" << default_game_window_class << "\")\n"
-            << "\t-clientwd: Sets the game's Window Description (default: \"" << default_game_window_description << "\")"
-            << std::endl;
+                      << "\t-champion: Sets the champion name (default: \"" << default_champion_name << "\")\n"
+                      << "\t-clientwc: Sets the client's WINDOW_CLASS (default: \"" << default_client_window_class << "\")\n"
+                      << "\t-clientwd: Sets the client's Window Description (default: \"" << default_client_window_description << "\")\n"
+                      << "\t-gamewc: Sets the game's WINDOW_CLASS (default: \"" << default_game_window_class << "\")\n"
+                      << "\t-clientwd: Sets the game's Window Description (default: \"" << default_game_window_description << "\")"
+                      << std::endl;
             std::cout << "The champion's name is case-insensitive." << std::endl;
             std::cout << "You can use the Windows tool spy.exe to get the Window information." << std::endl;
             return 0;
         }
-        if(i == j) {
+        if (i == j)
+        {
             std::cerr << "Invalid Option: \"" << argv[i] << '"' << std::endl;
             return 1;
         }
     }
-    std::cout << "Options:\n"
-    << "Champion Name: \"" << champion_name << "\"\n"
-    << "Client Window Class: \"" << client_window_class << "\"\n"
-    << "Client Window Description: \"" << client_window_description << "\"\n"
-    << "Game Window Class: \"" << game_window_class << "\"\n"
-    << "Game Window Description: \"" << game_window_description << "\"\n"
-    << std::endl;
 
-    champion champ = atoc(champion_name);
-    if(champ == champion::INVALID) {
-        std::cerr << "Champion \"" << champion_name << "\" is invalid and likely isn't implemented yet." << std::endl;
+    stopretty(data.champion_name);
+
+    std::cout << "Options:\n"
+              << "Champion Name: \"" << data.champion_name << "\"\n"
+              << "Client Window Class: \"" << data.client_window_class << "\"\n"
+              << "Client Window Description: \"" << data.client_window_description << "\"\n"
+              << "Game Window Class: \"" << data.game_window_class << "\"\n"
+              << "Game Window Description: \"" << data.game_window_description << "\"\n"
+              << std::endl;
+
+    data.champion = atoc(data.champion_name);
+    if (data.champion == gameplay::champion::INVALID)
+    {
+        std::cerr << "Champion \"" << data.champion_name << "\" is invalid and likely isn't implemented yet." << std::endl;
         return 2;
     }
 
-    std::cout << "Creating Client Bot..." << std::flush;
-    client_bot client;
-    std::cout << "done" << std::endl;
-    std::cout << "Creating " << champion_name << " Bot..." << std::flush;
-    champion_bot *champion = new ashe_bot();
-    std::cout << "done" << std::endl;
-    champion->start();
-    WaitForSingleObject(champion->get_hThread(), INFINITE);
+    data.client_bot = new client_bot();
+
+    // std::cout << "Creating " << data.champion_name << " Bot...";
+    // Sleep(2500);
+    switch (data.champion)
+    {
+    case gameplay::champion::ASHE:
+        data.champion_bot = new ashe_bot();
+        break;
+    case gameplay::champion::INVALID:
+    default:
+        std::cerr << "failed\nChampion \"" << data.champion_name << "\" does not have a rule to be constructed in the driver." << std::endl;
+        return 3;
+    }
+    // std::cout << "done" << std::endl;
+
+    // std::cout << argc << std::endl;
+    // std::cout << argv[0] << std::endl;
+
+    HandleCommandInput(data);
+
     return 0;
 }
 
-char *HandleArgument(int &arg, char *argv[]) { return argv[arg++]; }
+std::string HandleArgument(int &arg, char *argv[]) { return argv[arg++]; }
 
-bool MatchArgument(int &arg, char *argv[], const char* argument) {
-    if(strcmp(argument, argv[arg])) {
+bool MatchArgument(int &arg, char *argv[], std::string const &argument)
+{
+    if (argument == argv[arg])
+    {
         ++arg;
         return true;
-    } else return false;
+    }
+    else
+        return false;
 }
 
-char *HandleArgumentWithPrefix(int &arg, char *argv[], const char *prefix, char *&argument) {
-    if(strcmp(prefix, argv[arg]) == 0) {
+std::string &HandleArgumentWithPrefix(int &arg, char *argv[], std::string const &prefix, std::string &argument)
+{
+    if (prefix == argv[arg])
+    {
         argument = argv[arg + 1];
         arg += 2;
     }
