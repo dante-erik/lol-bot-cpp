@@ -17,29 +17,124 @@ int main()
     //else, check state
     //end loop 1
 
-
-
     Robot robot = new Robot();
+
+    //how exact the pixel color's RGBs need to be
+    double tolerance = 0.0;
+
+    //in milliseconds
+    DWORD clickSpeed = 80;
+    DWORD keyTypeSpeed = 40;
 
     while (true) {
         //look for ingame
+        if (robot.GetPixelDiff(x, y, inGameColor, tolerance)) {
             //look for attached to player, if not attached, click to run home, press E
                 //while not in base, click to run home, press E
                 //if in base, buy items, try to attach to all teammates (click W on all prof icons bottom right above minimap), if not attached still, choose alive player to attach to
             //look for attached to player, if attached, check player's hp, if it's lower than some arbitrary value, heal with E, if still lower than value, heal with Redemption and heal with Mikaels
             //look for leveled up, upgrade E->W->R->Q
-        //look for start queue
-        //look for accept match
-        //look for champion search box, type yuumi
-        //look for yuumi, if not picked, pick it, if dont own yuumi, stop program and throw an error, if already picked, dodge and relog
-        //look for lobby text box, type "support uwu" and click enter
-        //look for summoner spells, if already set correctly, do nothing, if wrong, set correctly
-        //look for able to edit runes icon, if true, click edit, if runes already set, close runes, if runes not set, set runes and close runes
-        //look for play button, click it
-        //look for gamemode select screen, click normal game blind pick, click diff play button
-        //look for honor teammate, always honor arbitrary player
-        //look for popups like lvl up and quests, click ok
-        //look for play again button, click it
+        }
+        else if (robot.getPixelDiff(x, y, startQueueColor, tolerance)) {
+            //look for start queue
+            robot.LeftClick(x, y, clickSpeed);
+        }
+        else if (robot.getPixelDiff(x, y, acceptMatchColor, tolerance)) {
+            //look for accept match
+            robot.LeftClick(x, y, clickSpeed);
+        }
+        else if (robot.getPixelDiff(x, y, champSearchColor, tolerance)) {
+            //look for champion search box, type yuumi
+            robot.LeftClick(x, y, clickSpeed);
+            robot.KeyType("Yuumi", keyTypeSpeed);
+        }
+        else if (robot.GetPixelDiff(x, y, yuumiColor, tolerance)) {
+            //look for yuumi, if not picked, pick it, if dont own yuumi, stop program and throw an error, if already picked, dodge and relog
+            robot.LeftClick(x, y, clickSpeed);
+            //click lock in
+            robot.LeftClick(x, y, clickSpeed);
+        }
+        else if (robot.GetPixelDiff(x, y, lobbyTextBoxColor, tolerance)) {
+            //look for lobby text box, type "support" and click enter
+            robot.LeftClick(x, y, clickSpeed);
+            robot.KeyType("support", keyTypeSpeed);
+            //click enter
+            robot.KeyType(13, keyTypeSpeed);
+        }
+        else if (robot.GetPixelDiff(x, y, runesEditIconColor, tolerance)) {
+            //check each rune and set them if theyre incorrect
+            if (!robot.GetPixelDiff(x, y, guardianColor, tolerance)) {
+                //click the Green Tree for main runes
+                robot.LeftClick(x, y, clickSpeed);
+                //set Guardian
+                robot.LeftClick(x, y, clickSpeed);
+            }
+            if (!robot.GetPixelDiff(x, y, fontOfLifeColor, tolerance)) {
+                //set Font Of Life
+                robot.LeftClick(x, y, clickSpeed);
+            }
+            if (!robot.GetPixelDiff(x, y, bonePlatingColor, tolerance)) {
+                //set Bone Plating
+                robot.LeftClick(x, y, clickSpeed);
+            }
+            if (!robot.GetPixelDiff(x, y, revitalizeColor, tolerance)) {
+                //set Revitalize
+                robot.LeftClick(x, y, clickSpeed);
+            }
+            if (!robot.GetPixelDiff(x, y, absoluteFocusColor, tolerance)) {
+                //set Absolute Focus
+                robot.LeftClick(x, y, clickSpeed);
+            }
+            if (!robot.GetPixelDiff(x, y, gatheringStormColor, tolerance)) {
+                //set Gathering Storm
+                robot.LeftClick(x, y, clickSpeed);
+            }
+            if (!robot.GetPixelDiff(x, y, adaptiveForce1Color, tolerance)) {
+                //set Adaptive Force
+                robot.LeftClick(x, y, clickSpeed);
+            }
+            if (!robot.GetPixelDiff(x, y, adaptiveForce2Color, tolerance)) {
+                //set Adaptive Force
+                robot.LeftClick(x, y, clickSpeed);
+            }
+            if (!robot.GetPixelDiff(x, y, armorColor, tolerance)) {
+                //set Armor
+                robot.LeftClick(x, y, clickSpeed);
+            }
+            if (!robot.GetPixelDiff(x, y, saveColor, tolerance)) {
+                //click save button
+                robot.LeftClick(x, y, clickSpeed);
+            }
+            //click X button
+            robot.LeftClick(x, y, clickSpeed);
+        }
+        //if they left or right ss isnt set correctly, check left, set, check right, set
+        else if (!robot.GetPixelDiff(x, y, summonerSpellsColorLeft, tolerance) || !robot.GetPixelDiff(x, y, summonerSpellsColorRight, tolerance)) {
+            if (!robot.GetPixelDiff(x, y, summonerSpellsColorLeft, tolerance)) {
+                robot.LeftClick(x, y, clickSpeed);
+                robot.LeftClick(x, y, clickSpeed);
+            }
+            if (!robot.GetPixelDiff(x, y, summonerSpellsColorRight, tolerance)) {
+                robot.LeftClick(x, y, clickSpeed);
+                robot.LeftClick(x, y, clickSpeed);
+            }
+        }
+        else if (robot.GetPixelDiff(x, y, honorColor, tolerance)) {
+            //look for honor teammate, always honor arbitrary player
+            robot.LeftClick(x, y, clickSpeed);
+        }
+        else if (robot.GetPixelDiff(x, y, playAgainColor, tolerance)) {
+            //click play again
+            robot.LeftClick(x, y, clickSpeed);
+        }
+        else if (robot.GetPixelDiff(x, y, levelUpColor, tolerance)) {
+            //click ok button
+            robot.LeftClick(x, y, clickSpeed);
+        }
+        else if (robot.GetPixelDiff(x, y, questColor, tolerance)) {
+            //click ok button
+            robot.LeftClick(x, y, clickSpeed);
+        }
     }
 }
 
