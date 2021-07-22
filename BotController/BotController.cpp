@@ -2,7 +2,9 @@
 //
 
 #include <iostream>
+#include <Winuser.h>
 #include "Robot.hpp"
+#include "RGBQuadValues.hpp"
 
 int main()
 {
@@ -26,42 +28,62 @@ int main()
     DWORD clickSpeed = 80;
     DWORD keyTypeSpeed = 40;
 
+    //checking for new champ selects to avoid repeating actions
+    bool newChampSelect = true;
+
     while (true) {
-        //look for ingame
-        if (robot.GetPixelDiff(x, y, inGameColor, tolerance)) {
+        //ingame state
+        while (robot.GetPixelDiff(x, y, inGameColor, tolerance)) {
             //look for attached to player, if not attached, click to run home, press E
                 //while not in base, click to run home, press E
                 //if in base, buy items, try to attach to all teammates (click W on all prof icons bottom right above minimap), if not attached still, choose alive player to attach to
             //look for attached to player, if attached, check player's hp, if it's lower than some arbitrary value, heal with E, if still lower than value, heal with Redemption and heal with Mikaels
             //look for leveled up, upgrade E->W->R->Q
         }
-        else if (robot.getPixelDiff(x, y, startQueueColor, tolerance)) {
-            //look for start queue
+        //start queue state (lobby)
+        while (robot.getPixelDiff(x, y, startQueueColor, tolerance)) {
             robot.LeftClick(x, y, clickSpeed);
         }
-        else if (robot.getPixelDiff(x, y, acceptMatchColor, tolerance)) {
-            //look for accept match
+        //accept match state
+        while (robot.getPixelDiff(x, y, acceptMatchColor, tolerance)) {
             robot.LeftClick(x, y, clickSpeed);
         }
-        else if (robot.getPixelDiff(x, y, champSearchColor, tolerance)) {
+        //champ select state
+        newChampSelect = true;
+        while (robot.GetPixelDiff(x, y, champSelectColor, tolerance)) {
+            if (newChampSelect && robot.GetPixelDiff(x, y, champSelectColor, tolerance)) {
+
+            }
+
+            //put all the champ select stuff in here
+            //things to worry about:
+            //dodges
+            //yuumi banned
+            //yuumi not owned
+            //yuumi already picked
+            //ranked timing stuff, but do that later lmao
+        }
+        while (robot.getPixelDiff(x, y, champSearchColor, tolerance)) {
             //look for champion search box, type yuumi
             robot.LeftClick(x, y, clickSpeed);
             robot.KeyType("Yuumi", keyTypeSpeed);
         }
-        else if (robot.GetPixelDiff(x, y, yuumiColor, tolerance)) {
+        while (robot.GetPixelDiff(x, y, yuumiColor, tolerance)) {
             //look for yuumi, if not picked, pick it, if dont own yuumi, stop program and throw an error, if already picked, dodge and relog
             robot.LeftClick(x, y, clickSpeed);
             //click lock in
             robot.LeftClick(x, y, clickSpeed);
         }
-        else if (robot.GetPixelDiff(x, y, lobbyTextBoxColor, tolerance)) {
+        while (robot.GetPixelDiff(x, y, lobbyTextBoxColor, tolerance)) {
             //look for lobby text box, type "support" and click enter
             robot.LeftClick(x, y, clickSpeed);
             robot.KeyType("support", keyTypeSpeed);
             //click enter
-            robot.KeyType(13, keyTypeSpeed);
+            robot.KeyType(VK_ENTER, keyTypeSpeed);
         }
-        else if (robot.GetPixelDiff(x, y, runesEditIconColor, tolerance)) {
+        while (robot.GetPixelDiff(x, y, editRunesIconColor, tolerance)) {
+            //click on edit runes icon
+            robot.LeftClick(x, y, clickSpeed);
             //check each rune and set them if theyre incorrect
             if (!robot.GetPixelDiff(x, y, guardianColor, tolerance)) {
                 //click the Green Tree for main runes
@@ -82,6 +104,8 @@ int main()
                 robot.LeftClick(x, y, clickSpeed);
             }
             if (!robot.GetPixelDiff(x, y, absoluteFocusColor, tolerance)) {
+                //click the Blue Tree for secondary runes
+                robot.LeftClick(x, y, clickSpeed);
                 //set Absolute Focus
                 robot.LeftClick(x, y, clickSpeed);
             }
@@ -109,7 +133,7 @@ int main()
             robot.LeftClick(x, y, clickSpeed);
         }
         //if they left or right ss isnt set correctly, check left, set, check right, set
-        else if (!robot.GetPixelDiff(x, y, summonerSpellsColorLeft, tolerance) || !robot.GetPixelDiff(x, y, summonerSpellsColorRight, tolerance)) {
+        while (!robot.GetPixelDiff(x, y, summonerSpellsColorLeft, tolerance) || !robot.GetPixelDiff(x, y, summonerSpellsColorRight, tolerance)) {
             if (!robot.GetPixelDiff(x, y, summonerSpellsColorLeft, tolerance)) {
                 robot.LeftClick(x, y, clickSpeed);
                 robot.LeftClick(x, y, clickSpeed);
@@ -119,19 +143,19 @@ int main()
                 robot.LeftClick(x, y, clickSpeed);
             }
         }
-        else if (robot.GetPixelDiff(x, y, honorColor, tolerance)) {
+        while (robot.GetPixelDiff(x, y, honorColor, tolerance)) {
             //look for honor teammate, always honor arbitrary player
             robot.LeftClick(x, y, clickSpeed);
         }
-        else if (robot.GetPixelDiff(x, y, playAgainColor, tolerance)) {
+        while (robot.GetPixelDiff(x, y, playAgainColor, tolerance)) {
             //click play again
             robot.LeftClick(x, y, clickSpeed);
         }
-        else if (robot.GetPixelDiff(x, y, levelUpColor, tolerance)) {
+        while (robot.GetPixelDiff(x, y, levelUpColor, tolerance)) {
             //click ok button
             robot.LeftClick(x, y, clickSpeed);
         }
-        else if (robot.GetPixelDiff(x, y, questColor, tolerance)) {
+        while (robot.GetPixelDiff(x, y, questColor, tolerance)) {
             //click ok button
             robot.LeftClick(x, y, clickSpeed);
         }
