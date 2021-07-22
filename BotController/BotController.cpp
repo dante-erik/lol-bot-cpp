@@ -4,7 +4,7 @@
 #include <iostream>
 #include <Winuser.h>
 #include "Robot.hpp"
-#include "RGBQuadValues.hpp"
+//include "RGBQuadValues.hpp"
 
 int main()
 {
@@ -19,146 +19,187 @@ int main()
     //else, check state
     //end loop 1
 
-    Robot robot = new Robot();
+    Robot robot = Robot();
 
     //how exact the pixel color's RGBs need to be
     double tolerance = 0.0;
 
     //in milliseconds
     DWORD clickSpeed = 80;
-    DWORD keyTypeSpeed = 40;
+    DWORD typeSpeed = 40;
 
     //checking for new champ selects to avoid repeating actions
     bool newChampSelect = true;
 
+    //counts each iteration of the while (true) loop, used for debugging only
+    unsigned long counter = 0;
+
     while (true) {
-        //ingame state
-        while (robot.GetPixelDiff(x, y, inGameColor, tolerance)) {
+
+        //in game state
+        while (robot.getPixelDiff(x, y, inGameColor, tolerance)) {
             //look for attached to player, if not attached, click to run home, press E
                 //while not in base, click to run home, press E
                 //if in base, buy items, try to attach to all teammates (click W on all prof icons bottom right above minimap), if not attached still, choose alive player to attach to
             //look for attached to player, if attached, check player's hp, if it's lower than some arbitrary value, heal with E, if still lower than value, heal with Redemption and heal with Mikaels
             //look for leveled up, upgrade E->W->R->Q
         }
-        //start queue state (lobby)
+
+        //start queue state
         while (robot.getPixelDiff(x, y, startQueueColor, tolerance)) {
-            robot.LeftClick(x, y, clickSpeed);
+            //click start queue button
+            robot.leftClick(x, y, clickSpeed);
         }
+
         //accept match state
         while (robot.getPixelDiff(x, y, acceptMatchColor, tolerance)) {
-            robot.LeftClick(x, y, clickSpeed);
+            //click accept match button
+            robot.leftClick(x, y, clickSpeed);
         }
-        //champ select state
+
+        //set to true to allow for actions in the champ select
         newChampSelect = true;
-        while (robot.GetPixelDiff(x, y, champSelectColor, tolerance)) {
-            if (newChampSelect && robot.GetPixelDiff(x, y, champSelectColor, tolerance)) {
+        //champ select state
+        while (robot.getPixelDiff(x, y, champSelectColor, tolerance)) {
+            if (newChampSelect) {
+                //click on champ search box
+                robot.leftClick(x, y, clickSpeed);
+                //search for yuumi
+                robot.keyType("Yuumi", typeSpeed);
+                //click yuumi icon
+                robot.leftClick(x, y, clickSpeed);
 
-            }
+                do {
+                    //click lock in until it locks in yuumi
+                    robot.leftClick(x, y, clickSpeed);
+                } while (robot.getPixelDiff(x, y, yuumiColor, tolerance));
 
-            //put all the champ select stuff in here
-            //things to worry about:
-            //dodges
-            //yuumi banned
-            //yuumi not owned
-            //yuumi already picked
-            //ranked timing stuff, but do that later lmao
+                //click the chat text box
+                robot.leftClick(x, y, clickSpeed);
+                //type "support" to the other players in the lobby
+                robot.keyType("support", typeSpeed);
+
+                //set left summoner spell if it is incorrect
+                if (!robot.getPixelDiff(x, y, summonerSpellsColorLeft, tolerance) && robot.getPixelDiff(x, y, champSelectColor, tolerance)) {
+                    //click the incorrect summoner spell to open the ss panel
+                    robot.leftClick(x, y, clickSpeed);
+                    //click the correct one to set it
+                    robot.leftClick(x, y, clickSpeed);
+                }
+
+                //set right summoner spell if needed
+                if (!robot.getPixelDiff(x, y, summonerSpellsColorRight, tolerance) && robot.getPixelDiff(x, y, champSelectColor, tolerance)) {
+                    //click the incorrect summoner spell to open the ss panel
+                    robot.leftClick(x, y, clickSpeed);
+                    //click the correct one to set it
+                    robot.leftClick(x, y, clickSpeed);
+                }
+
+                //if the account lvl is high enough to edit runes, edit runes
+                if (robot.getPixelDiff(x, y, editRunesIconColor, tolerance)) {
+                    //click on edit runes icon
+                    robot.leftClick(x, y, clickSpeed);
+
+                    //check each rune and set them if theyre incorrect
+                    if (!robot.getPixelDiff(x, y, guardianColor, tolerance) && robot.getPixelDiff(x, y, champSelectColor, tolerance)) {
+                        //click the Green Tree for main runes
+                        robot.leftClick(x, y, clickSpeed);
+                        //set Guardian
+                        robot.leftClick(x, y, clickSpeed);
+                    }
+
+                    if (!robot.getPixelDiff(x, y, fontOfLifeColor, tolerance) && robot.getPixelDiff(x, y, champSelectColor, tolerance)) {
+                        //set Font Of Life
+                        robot.leftClick(x, y, clickSpeed);
+                    }
+
+                    if (!robot.getPixelDiff(x, y, bonePlatingColor, tolerance) && robot.getPixelDiff(x, y, champSelectColor, tolerance)) {
+                        //set Bone Plating
+                        robot.leftClick(x, y, clickSpeed);
+                    }
+
+                    if (!robot.getPixelDiff(x, y, revitalizeColor, tolerance) && robot.getPixelDiff(x, y, champSelectColor, tolerance)) {
+                        //set Revitalize
+                        robot.leftClick(x, y, clickSpeed);
+                    }
+
+                    if (!robot.getPixelDiff(x, y, absoluteFocusColor, tolerance) && robot.getPixelDiff(x, y, champSelectColor, tolerance)) {
+                        //click the Blue Tree for secondary runes
+                        robot.leftClick(x, y, clickSpeed);
+                        //set Absolute Focus
+                        robot.leftClick(x, y, clickSpeed);
+                    }
+
+                    if (!robot.getPixelDiff(x, y, gatheringStormColor, tolerance) && robot.getPixelDiff(x, y, champSelectColor, tolerance)) {
+                        //set Gathering Storm
+                        robot.leftClick(x, y, clickSpeed);
+                    }
+
+                    if (!robot.getPixelDiff(x, y, adaptiveForce1Color, tolerance) && robot.getPixelDiff(x, y, champSelectColor, tolerance)) {
+                        //set Adaptive Force
+                        robot.leftClick(x, y, clickSpeed);
+                    }
+
+                    if (!robot.getPixelDiff(x, y, adaptiveForce2Color, tolerance) && robot.getPixelDiff(x, y, champSelectColor, tolerance)) {
+                        //set Adaptive Force
+                        robot.leftClick(x, y, clickSpeed);
+                    }
+
+                    if (!robot.getPixelDiff(x, y, armorColor, tolerance) && robot.getPixelDiff(x, y, champSelectColor, tolerance)) {
+                        //set Armor
+                        robot.leftClick(x, y, clickSpeed);
+                    }
+
+                    if (!robot.getPixelDiff(x, y, saveColor, tolerance) && robot.getPixelDiff(x, y, champSelectColor, tolerance)) {
+                        //click save button
+                        robot.leftClick(x, y, clickSpeed);
+                    }
+
+                    if (robot.getPixelDiff(x, y, champSelectColor, tolerance)) {
+                        //click X button
+                        robot.leftClick(x, y, clickSpeed);
+                    }
+                }
+                //dont repeat these actions until the current champ select state has ended (dodged, or game started)
+                newChampSelect = false;
+            }
         }
-        while (robot.getPixelDiff(x, y, champSearchColor, tolerance)) {
-            //look for champion search box, type yuumi
-            robot.LeftClick(x, y, clickSpeed);
-            robot.KeyType("Yuumi", keyTypeSpeed);
-        }
-        while (robot.GetPixelDiff(x, y, yuumiColor, tolerance)) {
-            //look for yuumi, if not picked, pick it, if dont own yuumi, stop program and throw an error, if already picked, dodge and relog
-            robot.LeftClick(x, y, clickSpeed);
-            //click lock in
-            robot.LeftClick(x, y, clickSpeed);
-        }
-        while (robot.GetPixelDiff(x, y, lobbyTextBoxColor, tolerance)) {
-            //look for lobby text box, type "support" and click enter
-            robot.LeftClick(x, y, clickSpeed);
-            robot.KeyType("support", keyTypeSpeed);
-            //click enter
-            robot.KeyType(VK_ENTER, keyTypeSpeed);
-        }
-        while (robot.GetPixelDiff(x, y, editRunesIconColor, tolerance)) {
-            //click on edit runes icon
-            robot.LeftClick(x, y, clickSpeed);
-            //check each rune and set them if theyre incorrect
-            if (!robot.GetPixelDiff(x, y, guardianColor, tolerance)) {
-                //click the Green Tree for main runes
-                robot.LeftClick(x, y, clickSpeed);
-                //set Guardian
-                robot.LeftClick(x, y, clickSpeed);
-            }
-            if (!robot.GetPixelDiff(x, y, fontOfLifeColor, tolerance)) {
-                //set Font Of Life
-                robot.LeftClick(x, y, clickSpeed);
-            }
-            if (!robot.GetPixelDiff(x, y, bonePlatingColor, tolerance)) {
-                //set Bone Plating
-                robot.LeftClick(x, y, clickSpeed);
-            }
-            if (!robot.GetPixelDiff(x, y, revitalizeColor, tolerance)) {
-                //set Revitalize
-                robot.LeftClick(x, y, clickSpeed);
-            }
-            if (!robot.GetPixelDiff(x, y, absoluteFocusColor, tolerance)) {
-                //click the Blue Tree for secondary runes
-                robot.LeftClick(x, y, clickSpeed);
-                //set Absolute Focus
-                robot.LeftClick(x, y, clickSpeed);
-            }
-            if (!robot.GetPixelDiff(x, y, gatheringStormColor, tolerance)) {
-                //set Gathering Storm
-                robot.LeftClick(x, y, clickSpeed);
-            }
-            if (!robot.GetPixelDiff(x, y, adaptiveForce1Color, tolerance)) {
-                //set Adaptive Force
-                robot.LeftClick(x, y, clickSpeed);
-            }
-            if (!robot.GetPixelDiff(x, y, adaptiveForce2Color, tolerance)) {
-                //set Adaptive Force
-                robot.LeftClick(x, y, clickSpeed);
-            }
-            if (!robot.GetPixelDiff(x, y, armorColor, tolerance)) {
-                //set Armor
-                robot.LeftClick(x, y, clickSpeed);
-            }
-            if (!robot.GetPixelDiff(x, y, saveColor, tolerance)) {
-                //click save button
-                robot.LeftClick(x, y, clickSpeed);
-            }
-            //click X button
-            robot.LeftClick(x, y, clickSpeed);
-        }
-        //if they left or right ss isnt set correctly, check left, set, check right, set
-        while (!robot.GetPixelDiff(x, y, summonerSpellsColorLeft, tolerance) || !robot.GetPixelDiff(x, y, summonerSpellsColorRight, tolerance)) {
-            if (!robot.GetPixelDiff(x, y, summonerSpellsColorLeft, tolerance)) {
-                robot.LeftClick(x, y, clickSpeed);
-                robot.LeftClick(x, y, clickSpeed);
-            }
-            if (!robot.GetPixelDiff(x, y, summonerSpellsColorRight, tolerance)) {
-                robot.LeftClick(x, y, clickSpeed);
-                robot.LeftClick(x, y, clickSpeed);
-            }
-        }
-        while (robot.GetPixelDiff(x, y, honorColor, tolerance)) {
+
+        //honor teammate state
+        while (robot.getPixelDiff(x, y, honorColor, tolerance)) {
             //look for honor teammate, always honor arbitrary player
-            robot.LeftClick(x, y, clickSpeed);
+            robot.leftClick(x, y, clickSpeed);
         }
-        while (robot.GetPixelDiff(x, y, playAgainColor, tolerance)) {
+
+        //post-game state
+        while (robot.getPixelDiff(x, y, postGameColor, tolerance)) {
             //click play again
-            robot.LeftClick(x, y, clickSpeed);
+            robot.leftClick(x, y, clickSpeed);
         }
-        while (robot.GetPixelDiff(x, y, levelUpColor, tolerance)) {
+
+        //level up state
+        while (robot.getPixelDiff(x, y, levelUpColor, tolerance)) {
             //click ok button
-            robot.LeftClick(x, y, clickSpeed);
+            robot.leftClick(x, y, clickSpeed);
         }
-        while (robot.GetPixelDiff(x, y, questColor, tolerance)) {
+
+        //champion reward state
+        while (robot.getPixelDiff(x, y, championRewardColor, tolerance)) {
+            //click select on middle champion
+            robot.leftClick(x, y, clickSpeed);
+            //click okay
+            robot.leftClick(x, y, clickSpeed);
+        }
+
+        //quest reward state
+        while (robot.getPixelDiff(x, y, questColor, tolerance)) {
             //click ok button
-            robot.LeftClick(x, y, clickSpeed);
+            robot.leftClick(x, y, clickSpeed);
         }
+
+        //counts and displays how many while (true) loops have run, only used for debugging
+        counter++;
+        std::cout << "end of loop reached" << counter << std::endl;
     }
 }
 
