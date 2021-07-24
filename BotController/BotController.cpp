@@ -27,6 +27,9 @@ int main()
     //set to true after accepting a new match
     bool newGame = true;
 
+    //avoid repeating the buy action until the base is left and re-entered
+    bool ableToBuyItems = true;
+
     //counts each iteration of the while (true) loop, used for debugging only
     unsigned long counter = 0;
 
@@ -51,7 +54,7 @@ int main()
 
             //search for Spellthief's Edge
             EventWriter::Keyboard::KeyType("spellthief", typeSpeed);
-            //buy it with enter, and Microsoft calling enter VK_RETURN instead of VK_ENTER is gonna be a no for me
+            //buy it with enter, and Microsoft calling enter VK_RETURN instead of VK_ENTER makes me unhappy >:(
             EventWriter::Keyboard::KeyTypeVK(VK_RETURN, typeSpeed);
 
             //search
@@ -63,59 +66,95 @@ int main()
             EventWriter::Keyboard::KeyType("oracle lens", typeSpeed);
             EventWriter::Keyboard::KeyTypeVK(VK_RETURN, typeSpeed);
 
-            //attached to your teammate by mousing over their champ icon above minimap
-            robot.leftClick(x, y, clickSpeed);
+            //attach to your teammate by mousing over their champ icon above minimap farthest right
+            robot.setCursorPos(x, y);
+            EventWriter::Keyboard::('w', typeSpeed);
 
+            //dont repeat these actions until accepting a new match
             newGame = false;
         }
 
         //in game state
         while (robot.getPixelDiff(x, y, inGameColor, tolerance)) {
-            //always makes sure yuumi is attached or trying to attach
-            if (/*not attached cuz of ally death*/) {
-                //attach to different teammate
-            }
-            else if (/*not attached cuz of ally recall*/) {
-                //buy items, re-attach to same teammate
-            }
+            //if not attached to ally
+            if (/*not attached to ally*/) {
 
-            if (/*attached and attached ally hp is REALLY low*/) {
+                //you can check if you're in base by looking at the color of the gold thing below items, it's brighter when in base
+                //if in base and not attached
+                if (/*in base*/) {
+                    if (/*ableToBuyItems*/) {
+                        //buy items (forbidden idol, redemption, mikaels, moonstone, ardent, staff of flowing water)
+                        
+                        ableToBuyItems = false;
+                    }
+
+                    //attach to teammate
+                    robot.setCursorPos(x, y);
+                    EventWriter::Keyboard::('w', typeSpeed);
+                }
+                //after leaving the base, the bot now buys items the next time it enters the base
+                else if (/*not in base*/) {
+                    //able to buy items next time in base
+                    ableToBuyItems = true;
+
+                    //run to base
+                    robot.rightClick(x, y, clickSpeed);
+
+                    //if yuumi is low hp, heal with E
+                    if (/*yuumi is low hp*/) {
+                        //E heal self
+                        EventWriter::Keyboard::KeyType('e', typeSpeed);
+                    }
+                }
+                //if teammate recalled, it re-attaches to them after buying item
+                //if teammate died, it makes you run to the base
+            }
+            else if (/*attached and attached ally hp is REALLY low*/) {
                 //summoner heal
-                //redemption
-                //mikaels
+                EventWriter::Keyboard::KeyType('d', typeSpeed);
+
+                //redemption, on attached ally
+                //mouse over ally icon above minimap, active items work using that icon
+                robot.setCursorPos(x, y);
+                EventWriter::Keyboard::KeyType('2', typeSpeed);
+                robot.leftClick(x, y, clickSpeed);
+
+                //mikaels, on attached ally
+                EventWriter::Keyboard::KeyType('3', typeSpeed);
+                robot.leftClick(x, y, clickSpeed);
+
                 //E heal ally
+                EventWriter::Keyboard::KeyType('e', typeSpeed);
+
                 //ping mana
+                EventWriter::Keyboard::KeyDownVK(VK_CONTROL);
+                robot.leftClick(x, y, clickSpeed);
                 //ping E
+                robot.leftClick(x, y, clickSpeed);
+                EventWriter::Keyboard::KeyUpVK(VK_CONTROL);
             }
             else if (/*attached and attached ally hp is low*/) {
                 //E heal ally
+                EventWriter::Keyboard::KeyType('e', typeSpeed);
+
                 //ping mana
+                EventWriter::Keyboard::KeyDownVK(VK_CONTROL);
+                robot.leftClick(x, y, clickSpeed);
                 //ping E
+                robot.leftClick(x, y, clickSpeed);
+                EventWriter::Keyboard::KeyUpVK(VK_CONTROL);
             }
 
-            if (/*not attached and not in base and yuumi hp is low*/) {
-                //E heal yuumi
+            //if any ability can be lvled up
+            if (/*any ability can be leveled up*/) {
+                //level up abilities E->W->R->Q, R and Q never get used tho
+                EventWriter::Keyboard::KeyDownVK(VK_CONTROL);
+                EventWriter::Keyboard::KeyType("ewrq", typeSpeed);
+                EventWriter::Keyboard::KeyUpVK(VK_CONTROL);
             }
 
-            //you can check if you're in base by looking at the color of the gold thing below items, it's brighter when in base
-            if (/*in base*/) {
-                //buy items (forbidden idol, redemption, mikaels, moonstone, ardent, staff of flowing water)
-                //re-attach to same teammate since they must've recalled
-            }
-
-            //level up abilities E->W->R->Q, R and Q never get used
-            if (/*E can be leveled up*/) {
-                //level up E
-            }
-            else if (/*W can be leveled up*/) {
-                //level up W
-            }
-            else if (/*R can be leveled up*/) {
-                //level up R
-            }
-            else if (/*Q can be leveled up*/) {
-                //level up Q
-            }
+            //set cursor somewhere arbitrary
+            robot.setCursorPos(x, y);
         }
 
         //start queue state
@@ -133,8 +172,6 @@ int main()
             //it makes newGame actions occur on the next while (true) loop cycle when in game
             newGame = true;
         }
-
-        
 
         //champ select state
         while (robot.getPixelDiff(x, y, champSelectColor, tolerance)) {
