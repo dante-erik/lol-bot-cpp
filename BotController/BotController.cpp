@@ -1,6 +1,3 @@
-// BotController.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
 #include <iostream>
 #include <Winuser.h>
 #include "Robot.hpp"
@@ -30,9 +27,7 @@ int main()
     //avoid repeating the buy action until the base is left and re-entered
     bool ableToBuyItems = true;
 
-    //counts each iteration of the while (true) loop, used for debugging only
-    unsigned long counter = 0;
-
+    //bot running loop
     while (true) {
 
         //if entering a new game, do these things before normal in game actions
@@ -216,6 +211,24 @@ int main()
                     //click on edit runes icon
                     robot.leftClick(x, y, clickSpeed);
 
+                    //if the rune page is a preset (has a lock icon), change to the highest up rune page
+                    if (robot.getPixelDiff(x, y, runePageLockColor, tolerance)) {
+                        //click on rune page drop-down bar
+                        robot.leftClick(x, y, clickSpeed);
+
+                        //click on highest rune page
+                        robot.leftClick(x, y, clickSpeed);
+
+                        //if the rune page is still a preset, add a new rune page
+                        if (robot.getPixelDiff(x, y, runePageLockColor, tolerance)) {
+                            //click on rune page drop-down bar
+                            robot.leftClick(x, y, clickSpeed);
+
+                            //click on add new rune page
+                            robot.leftClick(x, y, clickSpeed);
+                        }
+                    }
+
                     //check if each rune is unset, if each rune is incorrect, then set them if theyre incorrect or unset, but only when the runes window is open
                     if ((robot.getPixelDiff(x, y, mainRune1UnselectedColor, tolerance) || !robot.getPixelDiff(x, y, guardianColor, tolerance)) && robot.getPixelDiff(x, y, runesPageColor, tolerance)) {
                         //click the Green Tree for main runes
@@ -302,6 +315,12 @@ int main()
             robot.leftClick(x, y, clickSpeed);
         }
 
+        //daily reward state
+        while (robot.getPixelDiff(x, y, dailyRewardColor, tolerance)) {
+            //click ok button
+            robot.leftClick(x, y, clickSpeed);
+        }
+
         //champion reward state
         while (robot.getPixelDiff(x, y, championRewardColor, tolerance)) {
             //click select on arbitrary champion
@@ -315,12 +334,6 @@ int main()
             //click ok button
             robot.leftClick(x, y, clickSpeed);
         }
-
-        //add the rest of the states here after reviewing the old java lol bot's code
-
-        //counts and displays how many while (true) loops have run, only used for debugging
-        counter++;
-        std::cout << "end of loop reached" << counter << std::endl;
     }
 }
 
