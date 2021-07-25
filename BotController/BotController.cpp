@@ -27,6 +27,9 @@ int main()
     //avoid repeating the buy action until the base is left and re-entered
     bool ableToBuyItems = true;
 
+    //coordinates for ally base set each game in newGame section
+    long baseX, baseY;
+
     //bot running loop
     while (true) {
 
@@ -38,6 +41,17 @@ int main()
             //there's 10 '4's being clicked, 10 * 500 = 5000 milliseconds = 5 seconds
             EventWriter::Keyboard::KeyType("4444444444", 500);
             EventWriter::Keyboard::KeyUpVK(VK_CONTROL);
+
+            //if blue side, set blue base coors
+            if (robot.getPixelDiff(x, y, redSideFogOfWarColor, tolerance)) {
+                baseX = number;
+                baseY = number;
+            }
+            //if red side, set red base coors
+            else {
+                baseX = otherNumber;
+                baseY = otherNumber;
+            }
 
             //open shop with P hotkey
             EventWriter::Keyboard::KeyType('p', typeSpeed);
@@ -61,6 +75,9 @@ int main()
             EventWriter::Keyboard::KeyType("oracle lens", typeSpeed);
             EventWriter::Keyboard::KeyTypeVK(VK_RETURN, typeSpeed);
 
+            //close shop with P hotkey
+            EventWriter::Keyboard::KeyType('p', typeSpeed);
+
             //attach to your teammate by mousing over their champ icon above minimap farthest right
             robot.setCursorPos(x, y);
             EventWriter::Keyboard::('w', typeSpeed);
@@ -72,28 +89,213 @@ int main()
         //in game state
         while (robot.getPixelDiff(x, y, inGameColor, tolerance)) {
             //if not attached to ally
-            if (/*not attached to ally*/) {
+            if (robot.getPixelDiff(x, y, unattachedWColor, tolerance)) {
 
                 //you can check if you're in base by looking at the color of the gold thing below items, it's brighter when in base
-                //if in base and not attached
-                if (/*in base*/) {
-                    if (/*ableToBuyItems*/) {
-                        //buy items (forbidden idol, redemption, mikaels, moonstone, ardent, staff of flowing water)
-                        
+                //if in base (and not attached)
+                if (robot.getPixelDiff(x, y, inBaseColor, tolerance)) {
+
+                    if (ableToBuyItems) {
+                        //buy items in this order (redemption, mikael's, ardent, staff of flowing water, shurelya's)
+
+                        //look item item slot N, if there's an empty slot or there's item component
+                            //try to buy item N
+                            //look at item slot N, if there's an empty slot (couldnt afford item N)
+                                //try to buy item component of item N
+
+                        //future note to erik filling in the x, y values here, THEY ARENT THE SAME AFTER EACH ELSE, DIFF ITEM SLOTS, PLEASE READ THIS OR REMEMBER ON UR OWN.
+                        if (robot.getPixelDiff(x, y, emptyItemSlotColor, tolerance) || robot.getPixelDiff(x, y, forbiddenIdolColor, tolerance)) {
+                            //open shop with P hotkey
+                            EventWriter::Keyboard::KeyType('p', typeSpeed);
+
+                            //Ctrl + L is the item search hotkey
+                            EventWriter::Keyboard::KeyDownVK(VK_CONTROL);
+                            EventWriter::Keyboard::KeyType('l', typeSpeed);
+                            EventWriter::Keyboard::KeyUpVK(VK_CONTROL);
+
+                            //search for Redemption
+                            EventWriter::Keyboard::KeyType("redemption", typeSpeed);
+                            //buy it with enter
+                            EventWriter::Keyboard::KeyTypeVK(VK_RETURN, typeSpeed);
+
+                            //close shop with P hotkey
+                            EventWriter::Keyboard::KeyType('p', typeSpeed);
+
+                            if (robot.getPixelDiff(x, y, emptyItemSlotColor, tolerance)) {
+                                //open shop with P hotkey
+                                EventWriter::Keyboard::KeyType('p', typeSpeed);
+
+                                //Ctrl + L is the item search hotkey
+                                EventWriter::Keyboard::KeyDownVK(VK_CONTROL);
+                                EventWriter::Keyboard::KeyType('l', typeSpeed);
+                                EventWriter::Keyboard::KeyUpVK(VK_CONTROL);
+
+                                //search for Redemption
+                                EventWriter::Keyboard::KeyType("forbidden idol", typeSpeed);
+                                //buy it with enter
+                                EventWriter::Keyboard::KeyTypeVK(VK_RETURN, typeSpeed);
+
+                                //close shop with P hotkey
+                                EventWriter::Keyboard::KeyType('p', typeSpeed);
+                            }
+                        }
+                        else if (robot.getPixelDiff(x, y, emptyItemSlotColor, tolerance) || robot.getPixelDiff(x, y, forbiddenIdolColor, tolerance)) {
+                            //open shop with P hotkey
+                            EventWriter::Keyboard::KeyType('p', typeSpeed);
+
+                            //Ctrl + L is the item search hotkey
+                            EventWriter::Keyboard::KeyDownVK(VK_CONTROL);
+                            EventWriter::Keyboard::KeyType('l', typeSpeed);
+                            EventWriter::Keyboard::KeyUpVK(VK_CONTROL);
+
+                            //search for Redemption
+                            EventWriter::Keyboard::KeyType("mikael's blessing", typeSpeed);
+                            //buy it with enter
+                            EventWriter::Keyboard::KeyTypeVK(VK_RETURN, typeSpeed);
+
+                            //close shop with P hotkey
+                            EventWriter::Keyboard::KeyType('p', typeSpeed);
+
+                            if (robot.getPixelDiff(x, y, emptyItemSlotColor, tolerance)) {
+                                //open shop with P hotkey
+                                EventWriter::Keyboard::KeyType('p', typeSpeed);
+
+                                //Ctrl + L is the item search hotkey
+                                EventWriter::Keyboard::KeyDownVK(VK_CONTROL);
+                                EventWriter::Keyboard::KeyType('l', typeSpeed);
+                                EventWriter::Keyboard::KeyUpVK(VK_CONTROL);
+
+                                //search for Redemption
+                                EventWriter::Keyboard::KeyType("forbidden idol", typeSpeed);
+                                //buy it with enter
+                                EventWriter::Keyboard::KeyTypeVK(VK_RETURN, typeSpeed);
+
+                                //close shop with P hotkey
+                                EventWriter::Keyboard::KeyType('p', typeSpeed);
+                            }
+                        }
+                        else if (robot.getPixelDiff(x, y, emptyItemSlotColor, tolerance) || robot.getPixelDiff(x, y, forbiddenIdolColor, tolerance)) {
+                            //open shop with P hotkey
+                            EventWriter::Keyboard::KeyType('p', typeSpeed);
+
+                            //Ctrl + L is the item search hotkey
+                            EventWriter::Keyboard::KeyDownVK(VK_CONTROL);
+                            EventWriter::Keyboard::KeyType('l', typeSpeed);
+                            EventWriter::Keyboard::KeyUpVK(VK_CONTROL);
+
+                            //search for Redemption
+                            EventWriter::Keyboard::KeyType("ardent censor", typeSpeed);
+                            //buy it with enter
+                            EventWriter::Keyboard::KeyTypeVK(VK_RETURN, typeSpeed);
+
+                            //close shop with P hotkey
+                            EventWriter::Keyboard::KeyType('p', typeSpeed);
+
+                            if (robot.getPixelDiff(x, y, emptyItemSlotColor, tolerance)) {
+                                //open shop with P hotkey
+                                EventWriter::Keyboard::KeyType('p', typeSpeed);
+
+                                //Ctrl + L is the item search hotkey
+                                EventWriter::Keyboard::KeyDownVK(VK_CONTROL);
+                                EventWriter::Keyboard::KeyType('l', typeSpeed);
+                                EventWriter::Keyboard::KeyUpVK(VK_CONTROL);
+
+                                //search for Redemption
+                                EventWriter::Keyboard::KeyType("forbidden idol", typeSpeed);
+                                //buy it with enter
+                                EventWriter::Keyboard::KeyTypeVK(VK_RETURN, typeSpeed);
+
+                                //close shop with P hotkey
+                                EventWriter::Keyboard::KeyType('p', typeSpeed);
+                            }
+                        }
+                        else if (robot.getPixelDiff(x, y, emptyItemSlotColor, tolerance) || robot.getPixelDiff(x, y, forbiddenIdolColor, tolerance)) {
+                            //open shop with P hotkey
+                            EventWriter::Keyboard::KeyType('p', typeSpeed);
+
+                            //Ctrl + L is the item search hotkey
+                            EventWriter::Keyboard::KeyDownVK(VK_CONTROL);
+                            EventWriter::Keyboard::KeyType('l', typeSpeed);
+                            EventWriter::Keyboard::KeyUpVK(VK_CONTROL);
+
+                            //search for Redemption
+                            EventWriter::Keyboard::KeyType("staff of flowing water", typeSpeed);
+                            //buy it with enter
+                            EventWriter::Keyboard::KeyTypeVK(VK_RETURN, typeSpeed);
+
+                            //close shop with P hotkey
+                            EventWriter::Keyboard::KeyType('p', typeSpeed);
+
+                            if (robot.getPixelDiff(x, y, emptyItemSlotColor, tolerance)) {
+                                //open shop with P hotkey
+                                EventWriter::Keyboard::KeyType('p', typeSpeed);
+
+                                //Ctrl + L is the item search hotkey
+                                EventWriter::Keyboard::KeyDownVK(VK_CONTROL);
+                                EventWriter::Keyboard::KeyType('l', typeSpeed);
+                                EventWriter::Keyboard::KeyUpVK(VK_CONTROL);
+
+                                //search for Redemption
+                                EventWriter::Keyboard::KeyType("forbidden idol", typeSpeed);
+                                //buy it with enter
+                                EventWriter::Keyboard::KeyTypeVK(VK_RETURN, typeSpeed);
+
+                                //close shop with P hotkey
+                                EventWriter::Keyboard::KeyType('p', typeSpeed);
+                            }
+                        }
+                        else if (robot.getPixelDiff(x, y, emptyItemSlotColor, tolerance) || robot.getPixelDiff(x, y, bandleglassMirrorColor, tolerance)) {
+                            //open shop with P hotkey
+                            EventWriter::Keyboard::KeyType('p', typeSpeed);
+
+                            //Ctrl + L is the item search hotkey
+                            EventWriter::Keyboard::KeyDownVK(VK_CONTROL);
+                            EventWriter::Keyboard::KeyType('l', typeSpeed);
+                            EventWriter::Keyboard::KeyUpVK(VK_CONTROL);
+
+                            //search for Redemption
+                            EventWriter::Keyboard::KeyType("shurelya's battlesong", typeSpeed);
+                            //buy it with enter
+                            EventWriter::Keyboard::KeyTypeVK(VK_RETURN, typeSpeed);
+
+                            //close shop with P hotkey
+                            EventWriter::Keyboard::KeyType('p', typeSpeed);
+
+                            if (robot.getPixelDiff(x, y, emptyItemSlotColor, tolerance)) {
+                                //open shop with P hotkey
+                                EventWriter::Keyboard::KeyType('p', typeSpeed);
+
+                                //Ctrl + L is the item search hotkey
+                                EventWriter::Keyboard::KeyDownVK(VK_CONTROL);
+                                EventWriter::Keyboard::KeyType('l', typeSpeed);
+                                EventWriter::Keyboard::KeyUpVK(VK_CONTROL);
+
+                                //search for Redemption
+                                EventWriter::Keyboard::KeyType("bandleglass mirror", typeSpeed);
+                                //buy it with enter
+                                EventWriter::Keyboard::KeyTypeVK(VK_RETURN, typeSpeed);
+
+                                //close shop with P hotkey
+                                EventWriter::Keyboard::KeyType('p', typeSpeed);
+                            }
+                        }
+                       
                         ableToBuyItems = false;
                     }
 
-                    //attach to teammate
-                    robot.setCursorPos(x, y);
-                    EventWriter::Keyboard::('w', typeSpeed);
+                    //while unattached after buying items in base, try attach to teammate until attached
+                    while (robot.getPixelDiff(x, y, unattachedWColor, tolerance)) {
+                        robot.setCursorPos(x, y);
+                        EventWriter::Keyboard::('w', typeSpeed);
+                    }
                 }
                 //after leaving the base, the bot now buys items the next time it enters the base
                 else if (/*not in base*/) {
                     //able to buy items next time in base
                     ableToBuyItems = true;
 
-                    //run to base
-                    robot.rightClick(x, y, clickSpeed);
+                    //run to ally base set earlier in newGame
+                    robot.rightClick(baseX, baseY, clickSpeed);
 
                     //if yuumi is low hp, heal with E
                     if (/*yuumi is low hp*/) {
