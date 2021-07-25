@@ -8,7 +8,7 @@ int main()
     Robot robot = Robot();
 
     //how exact the pixel color's RGBs need to be
-    double tolerance = 0.0;
+    DOUBLE tolerance = 0.0;
 
     //in milliseconds
     DWORD clickSpeed = 80;
@@ -17,18 +17,18 @@ int main()
     //checking for new champ selects to avoid repeating actions
     //set to false after finishing all champ select specific actions in a new champ select state
     //set to true after accepting a new match
-    bool newChampSelect = true;
+    BOOL newChampSelect = true;
 
     //avoid repeating starting actions in game
     //set to false at the end of newGame if actions
     //set to true after accepting a new match
-    bool newGame = true;
+    BOOL newGame = true;
 
     //avoid repeating the buy action until the base is left and re-entered
-    bool ableToBuyItems = true;
+    BOOL ableToBuyItems = true;
 
     //coordinates for ally base set each game in newGame section
-    long baseX, baseY;
+    LONG baseX, baseY;
 
     //bot running loop
     while (true) {
@@ -294,7 +294,7 @@ int main()
                     }
                 }
                 //if unattached and out of base
-                else if (robot.getPixelDiff(x, y, shopBrightColor, tolerance)) {
+                else if (robot.getPixelDiff(x, y, shopDarkColor, tolerance)) {
                     //able to buy items next time in base
                     ableToBuyItems = true;
 
@@ -302,7 +302,7 @@ int main()
                     robot.rightClick(baseX, baseY, clickSpeed);
 
                     //if yuumi is low hp, heal with E
-                    if (robot.getPixelDiff(x, y, lowHPColor, tolerance)) {
+                    if (robot.getPixelDiff(x, y, yuumiLowHPColor, tolerance)) {
                         //E heal self
                         EventWriter::Keyboard::KeyType('e', typeSpeed);
                     }
@@ -394,7 +394,7 @@ int main()
                 do {
                     //click lock in until it locks in yuumi
                     robot.leftClick(x, y, clickSpeed);
-                } while (robot.getPixelDiff(x, y, yuumiColor, tolerance));
+                } while (robot.getPixelDiff(x, y, yuumiIconColor, tolerance));
 
                 //click the chat text box
                 robot.leftClick(x, y, clickSpeed);
@@ -403,7 +403,7 @@ int main()
                 EventWriter::Keyboard::KeyType('p', 100);
 
                 //set left summoner spell if it is incorrect
-                if (!robot.getPixelDiff(x, y, summonerSpellsColorLeft, tolerance) && robot.getPixelDiff(x, y, champSelectColor, tolerance)) {
+                if (!robot.getPixelDiff(x, y, leftSummonerSpellColor, tolerance) && robot.getPixelDiff(x, y, champSelectColor, tolerance)) {
                     //click the incorrect summoner spell to open the ss panel
                     robot.leftClick(x, y, clickSpeed);
                     //click the correct one to set it
@@ -411,7 +411,7 @@ int main()
                 }
 
                 //set right summoner spell if needed
-                if (!robot.getPixelDiff(x, y, summonerSpellsColorRight, tolerance) && robot.getPixelDiff(x, y, champSelectColor, tolerance)) {
+                if (!robot.getPixelDiff(x, y, rightSummonerSpellsColor, tolerance) && robot.getPixelDiff(x, y, champSelectColor, tolerance)) {
                     //click the incorrect summoner spell to open the ss panel
                     robot.leftClick(x, y, clickSpeed);
                     //click the correct one to set it
@@ -477,12 +477,12 @@ int main()
                     }
 
                     if ((robot.getPixelDiff(x, y, statRune1UnselectedColor, tolerance) || !robot.getPixelDiff(x, y, adaptiveForce1Color, tolerance)) && robot.getPixelDiff(x, y, runesPageColor, tolerance)) {
-                        //set Adaptive Force
+                        //set Adaptive Force 1
                         robot.leftClick(x, y, clickSpeed);
                     }
 
                     if ((robot.getPixelDiff(x, y, statRune2UnselectedColor, tolerance) || !robot.getPixelDiff(x, y, adaptiveForce2Color, tolerance)) && robot.getPixelDiff(x, y, runesPageColor, tolerance)) {
-                        //set Adaptive Force
+                        //set Adaptive Force 2
                         robot.leftClick(x, y, clickSpeed);
                     }
 
