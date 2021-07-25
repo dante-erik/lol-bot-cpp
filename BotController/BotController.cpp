@@ -36,21 +36,21 @@ int main()
         //if entering a new game, do these things before normal in game actions
         //actions: wait 5 seconds, buy items, attach to ally
         if (newGame) {
-            //spam laugh for 5 seconds, yuumi W is blocked for 5 seconds at the start of the game
+            //spam taunt for 5 seconds, yuumi W is blocked for 5 seconds at the start of the game
             EventWriter::Keyboard::KeyDownVK(VK_CONTROL);
-            //there's 10 '4's being clicked, 10 * 500 = 5000 milliseconds = 5 seconds
-            EventWriter::Keyboard::KeyType("4444444444", 500);
+            //there's 10 '4's being clicked, 20 * 250 = 5000 milliseconds = 5 seconds
+            EventWriter::Keyboard::KeyType("11111111111111111111", 250);
             EventWriter::Keyboard::KeyUpVK(VK_CONTROL);
 
             //if blue side, set blue base coors
             if (robot.getPixelDiff(x, y, redSideFogOfWarColor, tolerance)) {
-                baseX = number;
-                baseY = number;
+                baseX = /*some x*/;
+                baseY = /*some y*/;
             }
             //if red side, set red base coors
             else {
-                baseX = otherNumber;
-                baseY = otherNumber;
+                baseX = /*some other x*/;
+                baseY = /*some other y*/;
             }
 
             //open shop with P hotkey
@@ -80,20 +80,23 @@ int main()
 
             //attach to your teammate by mousing over their champ icon above minimap farthest right
             robot.setCursorPos(x, y);
-            EventWriter::Keyboard::('w', typeSpeed);
+            EventWriter::Keyboard::KeyType('w', typeSpeed);
 
             //dont repeat these actions until accepting a new match
             newGame = false;
         }
 
         //in game state
-        while (robot.getPixelDiff(x, y, inGameColor, tolerance)) {
+        while (robot.getPixelDiff(x, y, HUDColor, tolerance)) {
             //if not attached to ally
             if (robot.getPixelDiff(x, y, unattachedWColor, tolerance)) {
 
+                //if teammate recalled, it re-attaches to them after buying item
+                //if teammate died, it makes you run to the base
+
                 //you can check if you're in base by looking at the color of the gold thing below items, it's brighter when in base
                 //if in base (and not attached)
-                if (robot.getPixelDiff(x, y, inBaseColor, tolerance)) {
+                if (robot.getPixelDiff(x, y, shopBrightColor, tolerance)) {
 
                     if (ableToBuyItems) {
                         //buy items in this order (redemption, mikael's, ardent, staff of flowing water, shurelya's)
@@ -113,7 +116,7 @@ int main()
                             EventWriter::Keyboard::KeyType('l', typeSpeed);
                             EventWriter::Keyboard::KeyUpVK(VK_CONTROL);
 
-                            //search for Redemption
+                            //search for redemption
                             EventWriter::Keyboard::KeyType("redemption", typeSpeed);
                             //buy it with enter
                             EventWriter::Keyboard::KeyTypeVK(VK_RETURN, typeSpeed);
@@ -130,7 +133,7 @@ int main()
                                 EventWriter::Keyboard::KeyType('l', typeSpeed);
                                 EventWriter::Keyboard::KeyUpVK(VK_CONTROL);
 
-                                //search for Redemption
+                                //search for forbidden idol
                                 EventWriter::Keyboard::KeyType("forbidden idol", typeSpeed);
                                 //buy it with enter
                                 EventWriter::Keyboard::KeyTypeVK(VK_RETURN, typeSpeed);
@@ -148,7 +151,7 @@ int main()
                             EventWriter::Keyboard::KeyType('l', typeSpeed);
                             EventWriter::Keyboard::KeyUpVK(VK_CONTROL);
 
-                            //search for Redemption
+                            //search for mikael's blessing
                             EventWriter::Keyboard::KeyType("mikael's blessing", typeSpeed);
                             //buy it with enter
                             EventWriter::Keyboard::KeyTypeVK(VK_RETURN, typeSpeed);
@@ -165,7 +168,7 @@ int main()
                                 EventWriter::Keyboard::KeyType('l', typeSpeed);
                                 EventWriter::Keyboard::KeyUpVK(VK_CONTROL);
 
-                                //search for Redemption
+                                //search for forbidden idol
                                 EventWriter::Keyboard::KeyType("forbidden idol", typeSpeed);
                                 //buy it with enter
                                 EventWriter::Keyboard::KeyTypeVK(VK_RETURN, typeSpeed);
@@ -183,7 +186,7 @@ int main()
                             EventWriter::Keyboard::KeyType('l', typeSpeed);
                             EventWriter::Keyboard::KeyUpVK(VK_CONTROL);
 
-                            //search for Redemption
+                            //search for ardent censor
                             EventWriter::Keyboard::KeyType("ardent censor", typeSpeed);
                             //buy it with enter
                             EventWriter::Keyboard::KeyTypeVK(VK_RETURN, typeSpeed);
@@ -200,7 +203,7 @@ int main()
                                 EventWriter::Keyboard::KeyType('l', typeSpeed);
                                 EventWriter::Keyboard::KeyUpVK(VK_CONTROL);
 
-                                //search for Redemption
+                                //search for forbidden idol
                                 EventWriter::Keyboard::KeyType("forbidden idol", typeSpeed);
                                 //buy it with enter
                                 EventWriter::Keyboard::KeyTypeVK(VK_RETURN, typeSpeed);
@@ -218,7 +221,7 @@ int main()
                             EventWriter::Keyboard::KeyType('l', typeSpeed);
                             EventWriter::Keyboard::KeyUpVK(VK_CONTROL);
 
-                            //search for Redemption
+                            //search for staff of flowing water
                             EventWriter::Keyboard::KeyType("staff of flowing water", typeSpeed);
                             //buy it with enter
                             EventWriter::Keyboard::KeyTypeVK(VK_RETURN, typeSpeed);
@@ -235,7 +238,7 @@ int main()
                                 EventWriter::Keyboard::KeyType('l', typeSpeed);
                                 EventWriter::Keyboard::KeyUpVK(VK_CONTROL);
 
-                                //search for Redemption
+                                //search for forbidden idol
                                 EventWriter::Keyboard::KeyType("forbidden idol", typeSpeed);
                                 //buy it with enter
                                 EventWriter::Keyboard::KeyTypeVK(VK_RETURN, typeSpeed);
@@ -253,7 +256,7 @@ int main()
                             EventWriter::Keyboard::KeyType('l', typeSpeed);
                             EventWriter::Keyboard::KeyUpVK(VK_CONTROL);
 
-                            //search for Redemption
+                            //search for shurelya's battlesong
                             EventWriter::Keyboard::KeyType("shurelya's battlesong", typeSpeed);
                             //buy it with enter
                             EventWriter::Keyboard::KeyTypeVK(VK_RETURN, typeSpeed);
@@ -270,7 +273,7 @@ int main()
                                 EventWriter::Keyboard::KeyType('l', typeSpeed);
                                 EventWriter::Keyboard::KeyUpVK(VK_CONTROL);
 
-                                //search for Redemption
+                                //search for bandleglass mirror
                                 EventWriter::Keyboard::KeyType("bandleglass mirror", typeSpeed);
                                 //buy it with enter
                                 EventWriter::Keyboard::KeyTypeVK(VK_RETURN, typeSpeed);
@@ -280,6 +283,7 @@ int main()
                             }
                         }
                        
+                        //after leaving the base, the bot now buys items the next time it enters the base
                         ableToBuyItems = false;
                     }
 
@@ -289,8 +293,8 @@ int main()
                         EventWriter::Keyboard::('w', typeSpeed);
                     }
                 }
-                //after leaving the base, the bot now buys items the next time it enters the base
-                else if (/*not in base*/) {
+                //if unattached and out of base
+                else if (robot.getPixelDiff(x, y, shopBrightColor, tolerance)) {
                     //able to buy items next time in base
                     ableToBuyItems = true;
 
@@ -298,15 +302,14 @@ int main()
                     robot.rightClick(baseX, baseY, clickSpeed);
 
                     //if yuumi is low hp, heal with E
-                    if (/*yuumi is low hp*/) {
+                    if (robot.getPixelDiff(x, y, lowHPColor, tolerance)) {
                         //E heal self
                         EventWriter::Keyboard::KeyType('e', typeSpeed);
                     }
                 }
-                //if teammate recalled, it re-attaches to them after buying item
-                //if teammate died, it makes you run to the base
             }
-            else if (/*attached and attached ally hp is REALLY low*/) {
+            //if attached teammate's hp is REALLY low and attached to them
+            else if (robot.getPixelDiff(x, y, attachedAllyReallyLowHPColor, tolerance) && robot.getPixelDiff(x, y, attachedWColor, tolerance)) {
                 //summoner heal
                 EventWriter::Keyboard::KeyType('d', typeSpeed);
 
@@ -323,6 +326,9 @@ int main()
                 //E heal ally
                 EventWriter::Keyboard::KeyType('e', typeSpeed);
 
+                //shurelya's ally
+                EventWriter::Keyboard::KeyType('7', typeSpeed);
+
                 //ping mana
                 EventWriter::Keyboard::KeyDownVK(VK_CONTROL);
                 robot.leftClick(x, y, clickSpeed);
@@ -330,7 +336,8 @@ int main()
                 robot.leftClick(x, y, clickSpeed);
                 EventWriter::Keyboard::KeyUpVK(VK_CONTROL);
             }
-            else if (/*attached and attached ally hp is low*/) {
+            //if attached teammate's hp is low and attached to them
+            else if (robot.getPixelDiff(x, y, attachedAllyLowHPColor, tolerance) && robot.getPixelDiff(x, y, attachedWColor, tolerance)) {
                 //E heal ally
                 EventWriter::Keyboard::KeyType('e', typeSpeed);
 
@@ -343,14 +350,17 @@ int main()
             }
 
             //if any ability can be lvled up
-            if (/*any ability can be leveled up*/) {
+            if (robot.getPixelDiff(x, y, canLevelUpQColor, tolerance) || 
+                robot.getPixelDiff(x, y, canLevelUpWColor, tolerance) || 
+                robot.getPixelDiff(x, y, canLevelUpEColor, tolerance) || 
+                robot.getPixelDiff(x, y, canLevelUpRColor, tolerance)) {
                 //level up abilities E->W->R->Q, R and Q never get used tho
                 EventWriter::Keyboard::KeyDownVK(VK_CONTROL);
                 EventWriter::Keyboard::KeyType("ewrq", typeSpeed);
                 EventWriter::Keyboard::KeyUpVK(VK_CONTROL);
             }
 
-            //set cursor somewhere arbitrary
+            //set cursor somewhere arbitrary cuz it's aesthetically pleasing
             robot.setCursorPos(x, y);
         }
 
@@ -538,14 +548,3 @@ int main()
         }
     }
 }
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
