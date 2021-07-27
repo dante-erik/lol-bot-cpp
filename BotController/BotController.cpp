@@ -5,6 +5,7 @@
 
 int main()
 {
+    //performs pixel checks and mouse actions
     Robot robot = Robot();
 
     //how exact the pixel color's RGBs need to be
@@ -547,4 +548,5 @@ int main()
             robot.leftClick(x, y, clickSpeed);
         }
     }
+    
 }
