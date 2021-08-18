@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BotController", "BotControl
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HumanRobot", "HumanRobot\HumanRobot.vcxproj", "{722E5181-F3C1-47D2-B332-8677024031A2}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DisplayPixel", "DisplayPixel\DisplayPixel.vcxproj", "{EB2CE535-DB44-4AAB-8925-1F70F193037B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -31,6 +33,14 @@ Global
 		{722E5181-F3C1-47D2-B332-8677024031A2}.Release|x64.Build.0 = Release|x64
 		{722E5181-F3C1-47D2-B332-8677024031A2}.Release|x86.ActiveCfg = Release|Win32
 		{722E5181-F3C1-47D2-B332-8677024031A2}.Release|x86.Build.0 = Release|Win32
+		{EB2CE535-DB44-4AAB-8925-1F70F193037B}.Debug|x64.ActiveCfg = Debug|x64
+		{EB2CE535-DB44-4AAB-8925-1F70F193037B}.Debug|x64.Build.0 = Debug|x64
+		{EB2CE535-DB44-4AAB-8925-1F70F193037B}.Debug|x86.ActiveCfg = Debug|Win32
+		{EB2CE535-DB44-4AAB-8925-1F70F193037B}.Debug|x86.Build.0 = Debug|Win32
+		{EB2CE535-DB44-4AAB-8925-1F70F193037B}.Release|x64.ActiveCfg = Release|x64
+		{EB2CE535-DB44-4AAB-8925-1F70F193037B}.Release|x64.Build.0 = Release|x64
+		{EB2CE535-DB44-4AAB-8925-1F70F193037B}.Release|x86.ActiveCfg = Release|Win32
+		{EB2CE535-DB44-4AAB-8925-1F70F193037B}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
