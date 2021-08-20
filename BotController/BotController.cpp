@@ -12,8 +12,8 @@ int main()
 	BYTE tolerance = 0;
 
 	//in milliseconds
-	DWORD clickSpeed = 80;
-	DWORD typeSpeed = 40;
+	DWORD clickSpeed = 70;
+	DWORD typeSpeed = 20;
 
 	//checking for new champ selects to avoid repeating actions
 	//set to false after finishing all champ select specific actions in a new champ select state
@@ -45,18 +45,33 @@ int main()
 	//	Sleep(10);
 	//}
 
+	/*while (true) {
+		std::cout << "r: " << (int)GamePixel::redSideFogOfWar.r << std::endl;
+		std::cout << "g: " << (int)GamePixel::redSideFogOfWar.g << std::endl;
+		std::cout << "b: " << (int)GamePixel::redSideFogOfWar.b << std::endl;
+		std::cout << "color r: " << (int)GamePixel::redSideFogOfWar.color.rgbRed << std::endl;
+		std::cout << "color g: " << (int)GamePixel::redSideFogOfWar.color.rgbGreen << std::endl;
+		std::cout << "color b: " << (int)GamePixel::redSideFogOfWar.color.rgbBlue << std::endl;
+		Sleep(10000);
+	}*/
+
 	//bot running loop
 	while (true) {
 
-		//grab the screen before checking which state the bot is in
+		//grab the screen buffer before checking which state the bot is in
 		robot.updatePixels();
 
 		//in game state
 		if (robot.getPixelDiff(GamePixel::HUD.x, GamePixel::HUD.y, GamePixel::HUD.color, tolerance)) {
 
+			std::cout << "newGame: " << newGame << std::endl << std::endl;
+
 			//if entering a new game, do these things before normal in game actions
 			//actions: wait 5 seconds, buy items, attach to ally
 			if (newGame) {
+				//fixes weird issue where the game needs to be leftclicked once to allow the in game hotkeys to work
+				robot.leftClick(GamePixel::arbitraryNearCenter.x, GamePixel::arbitraryNearCenter.y, clickSpeed);
+				
 				//spam taunt for 5 seconds, yuumi W is blocked for 5 seconds at the start of the game
 				EventWriter::Keyboard::KeyDownVK(VK_CONTROL);
 				//there's 10 '4's being clicked, 20 * 250 = 5000 milliseconds = 5 seconds
@@ -387,6 +402,7 @@ int main()
 				robot.getPixelDiff(GamePixel::canLevelUpE.x, GamePixel::canLevelUpE.y, GamePixel::canLevelUpE.color, tolerance) ||
 				robot.getPixelDiff(GamePixel::canLevelUpR.x, GamePixel::canLevelUpR.y, GamePixel::canLevelUpR.color, tolerance)) {
 				//level up abilities E->W->R->Q, R and Q never get used tho
+				std::cout << "lvling up e w r q now" << std::endl << std::endl;
 				EventWriter::Keyboard::KeyDownVK(VK_CONTROL);
 				EventWriter::Keyboard::KeyType("ewrq", typeSpeed);
 				EventWriter::Keyboard::KeyUpVK(VK_CONTROL);
@@ -414,39 +430,36 @@ int main()
 				else
 					//champ select state
 					//only do these actions once per unique champ select, otherwise just wait until the next state
-					if (newChampSelect && robot.getPixelDiff(GamePixel::champSelect.x, GamePixel::champSelect.y, GamePixel::champSelect.color, tolerance)) {
+					//if (newChampSelect && robot.getPixelDiff(GamePixel::champSelect.x, GamePixel::champSelect.y, GamePixel::champSelect.color, tolerance)) {
+						if (newChampSelect) {
 
 						std::cout << "now in champ select state" << '\n' << std::endl;
 
-						Sleep(100);
+						Sleep(250);
 
 						//click on champ search box
 						robot.leftClick(GamePixel::champSearchBox.x, GamePixel::champSearchBox.y, clickSpeed);
 						//Sleep(100);
 
-						//search for yuumi
-						EventWriter::Keyboard::KeyType("Yuumi", typeSpeed);
-						Sleep(100);
+						//search for yuumi, yu only brings up yuumi as of lol patch 11.16
+						EventWriter::Keyboard::KeyType("yu", typeSpeed);
+						Sleep(450);
 
 						//click yuumi icon
 						robot.leftClick(GamePixel::yuumiChampSelectIcon.x, GamePixel::yuumiChampSelectIcon.y, clickSpeed);
-						Sleep(100);
-
-						//click lock in
-						robot.leftClick(GamePixel::lockInButton.x, GamePixel::lockInButton.y, clickSpeed);
-						Sleep(100);
+						Sleep(200);
 
 						//click the chat text box
 						robot.leftClick(GamePixel::lobbyChatBox.x, GamePixel::lobbyChatBox.y, clickSpeed);
-						//type "support" to the other players in the lobby
-						EventWriter::Keyboard::KeyType("support", typeSpeed);
+						//type "supp" or "im a parasite" to the other players in the lobby
+						EventWriter::Keyboard::KeyType("im a parasite", typeSpeed);
 						EventWriter::Keyboard::KeyTypeVK(VK_RETURN, typeSpeed);
-						//EventWriter::Keyboard::KeyType('p', 100);
 
 						robot.updatePixels();
 
 						//set left summoner spell if it is incorrect
 						if (!robot.getPixelDiff(GamePixel::healSS.x, GamePixel::healSS.y, GamePixel::healSS.color, tolerance)) {
+							std::cout << "left ss isnt right, fixing it" << std::endl << std::endl;
 							//click the incorrect summoner spell where heal should be to open the ss panel
 							robot.leftClick(GamePixel::healSS.x, GamePixel::healSS.y, clickSpeed);
 							Sleep(500);
@@ -454,10 +467,13 @@ int main()
 							//click the correct one to set it
 							robot.leftClick(GamePixel::healSSInPanel.x, GamePixel::healSSInPanel.y, clickSpeed);
 							Sleep(500);
+
+							robot.updatePixels();
 						}
 
 						//set right summoner spell if needed
 						if (!robot.getPixelDiff(GamePixel::barrierSS.x, GamePixel::barrierSS.y, GamePixel::barrierSS.color, tolerance)) {
+							std::cout << "right ss isnt right, fixing it" << std::endl << std::endl;
 							//click the incorrect summoner spell to open the ss panel
 							robot.leftClick(GamePixel::barrierSS.x, GamePixel::barrierSS.y, clickSpeed);
 							Sleep(500);
@@ -469,42 +485,45 @@ int main()
 
 						//if the account lvl is high enough to edit runes, edit runes
 						if (robot.getPixelDiff(GamePixel::editRunesIcon.x, GamePixel::editRunesIcon.y, GamePixel::editRunesIcon.color, tolerance)) {
+							std::cout << "acc can edit runes" << std::endl << std::endl;
 							//click on edit runes icon
 							robot.leftClick(GamePixel::editRunesIcon.x, GamePixel::editRunesIcon.y, clickSpeed);
-							Sleep(800);
+							Sleep(1000);
 
 							robot.updatePixels();
 
 							//if runes are set on row display, switch to grid
-							if (robot.getPixelDiff(GamePixel::runesRowDisplay.x, GamePixel::runesRowDisplay.y, GamePixel::runesRowDisplay.color, tolerance)) {
+							//if (robot.getPixelDiff(GamePixel::runesRowDisplay.x, GamePixel::runesRowDisplay.y, GamePixel::runesRowDisplay.color, tolerance)) {
 								//click on the grid style rune page display
 								robot.leftClick(GamePixel::runesGridDisplay.x, GamePixel::runesGridDisplay.y, clickSpeed);
-								Sleep(200);
+								Sleep(700);
 
 								robot.updatePixels();
-							}
+							//}
 
 							//if the rune page is a preset (has a lock icon), change to the highest up rune page
 							if (robot.getPixelDiff(GamePixel::runePageLock.x, GamePixel::runePageLock.y, GamePixel::runePageLock.color, tolerance)) {
+								std::cout << "runepage is preset, selecting highest rune page" << std::endl << std::endl;
 								//click on rune page drop-down bar
 								robot.leftClick(GamePixel::runesDropDown.x, GamePixel::runesDropDown.y, clickSpeed);
-								Sleep(100);
+								Sleep(300);
 
 								//click on highest rune page
-								robot.leftClick(GamePixel::runesTopPage.x, GamePixel::runesTopPage.x, clickSpeed);
-								Sleep(300);
+								robot.leftClick(GamePixel::runesTopPage.x, GamePixel::runesTopPage.y, clickSpeed);
+								Sleep(700);
 
 								robot.updatePixels();
 
 								//if the rune page is still a preset, add a new rune page
 								if (robot.getPixelDiff(GamePixel::runePageLock.x, GamePixel::runePageLock.y, GamePixel::runePageLock.color, tolerance)) {
+									std::cout << "runepage is STILL preset, selecting add a new rune page" << std::endl << std::endl;
 									//click on rune page drop-down bar
 									robot.leftClick(GamePixel::runesDropDown.x, GamePixel::runesDropDown.y, clickSpeed);
-									Sleep(100);
+									Sleep(300);
 
 									//click on add new rune page
-									robot.leftClick(GamePixel::runesTopPage.x, GamePixel::runesTopPage.y, clickSpeed);
-									Sleep(500);
+									robot.leftClick(GamePixel::addNewRunePage.x, GamePixel::addNewRunePage.y, clickSpeed);
+									Sleep(700);
 								}
 							}
 
@@ -585,6 +604,11 @@ int main()
 							Sleep(100);
 							//}
 						}
+
+						//click lock in
+						robot.leftClick(GamePixel::lockInButton.x, GamePixel::lockInButton.y, clickSpeed);
+						Sleep(200);
+
 						//dont repeat these actions until the current champ select state has ended (dodged, or game started)
 						newChampSelect = false;
 					}
