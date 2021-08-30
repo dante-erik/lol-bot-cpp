@@ -55,6 +55,16 @@ int main()
 		Sleep(10000);
 	}*/
 
+	while (true) {
+		Sleep(5000);
+		std::cout << "hitting w then ctrl" << std::endl << std::endl;
+		//EventWriter::Keyboard::KeyDownVK(VK_CONTROL);
+		EventWriter::Keyboard::KeyType('w', 1000);
+		//EventWriter::Keyboard::KeyUpVK(VK_CONTROL);
+		EventWriter::Keyboard::KeyDown((char)0x1D);
+		EventWriter::Keyboard::KeyUp((char)0x1D);
+	}
+
 	//bot running loop
 	while (true) {
 
@@ -73,10 +83,10 @@ int main()
 				robot.leftClick(GamePixel::arbitraryNearCenter.x, GamePixel::arbitraryNearCenter.y, clickSpeed);
 				
 				//spam taunt for 5 seconds, yuumi W is blocked for 5 seconds at the start of the game
-				EventWriter::Keyboard::KeyDownVK(VK_CONTROL);
+				EventWriter::Keyboard::KeyDown((char)0x1D);
 				//there's 10 '4's being clicked, 20 * 250 = 5000 milliseconds = 5 seconds
 				EventWriter::Keyboard::KeyType("11111111111111111111", 250);
-				EventWriter::Keyboard::KeyUpVK(VK_CONTROL);
+				EventWriter::Keyboard::KeyUp((char)0x1D);
 
 				//if blue side, set blue base coors
 				if (robot.getPixelDiff(GamePixel::redSideFogOfWar.x, GamePixel::redSideFogOfWar.y, GamePixel::redSideFogOfWar.color, tolerance)) {
@@ -93,23 +103,23 @@ int main()
 				EventWriter::Keyboard::KeyType('p', typeSpeed);
 
 				//Ctrl + L is the item search hotkey
-				EventWriter::Keyboard::KeyDownVK(VK_CONTROL);
+				EventWriter::Keyboard::KeyDown((char)0x1D);
 				EventWriter::Keyboard::KeyType('l', typeSpeed);
-				EventWriter::Keyboard::KeyUpVK(VK_CONTROL);
+				EventWriter::Keyboard::KeyUp((char)0x1D);
 
 				//search for Spellthief's Edge
 				EventWriter::Keyboard::KeyType("spellthief", typeSpeed);
 				//buy it with enter, and Microsoft calling enter VK_RETURN instead of VK_ENTER makes me unhappy >:(
-				EventWriter::Keyboard::KeyTypeVK(VK_RETURN, typeSpeed);
+				EventWriter::Keyboard::KeyType((char)0x1D, typeSpeed);
 
 				//search
-				EventWriter::Keyboard::KeyDownVK(VK_CONTROL);
+				EventWriter::Keyboard::KeyDown((char)0x1D);
 				EventWriter::Keyboard::KeyType('l', typeSpeed);
-				EventWriter::Keyboard::KeyUpVK(VK_CONTROL);
+				EventWriter::Keyboard::KeyUp((char)0x1D);
 
 				//buy oracle lens
 				EventWriter::Keyboard::KeyType("oracle lens", typeSpeed);
-				EventWriter::Keyboard::KeyTypeVK(VK_RETURN, typeSpeed);
+				EventWriter::Keyboard::KeyType((char)0x1D, typeSpeed);
 
 				//close shop with P hotkey
 				EventWriter::Keyboard::KeyType('p', typeSpeed);
@@ -147,14 +157,14 @@ int main()
 							EventWriter::Keyboard::KeyType('p', typeSpeed);
 
 							//Ctrl + L is the item search hotkey
-							EventWriter::Keyboard::KeyDownVK(VK_CONTROL);
+							EventWriter::Keyboard::KeyDown((char)0x1D);
 							EventWriter::Keyboard::KeyType('l', typeSpeed);
-							EventWriter::Keyboard::KeyUpVK(VK_CONTROL);
+							EventWriter::Keyboard::KeyUp((char)0x1D);
 
 							//search for redemption
 							EventWriter::Keyboard::KeyType("redemption", typeSpeed);
 							//buy it with enter
-							EventWriter::Keyboard::KeyTypeVK(VK_RETURN, typeSpeed);
+							EventWriter::Keyboard::KeyType((char)0x1C, typeSpeed);
 
 							//close shop with P hotkey
 							EventWriter::Keyboard::KeyType('p', typeSpeed);
@@ -166,14 +176,14 @@ int main()
 								EventWriter::Keyboard::KeyType('p', typeSpeed);
 
 								//Ctrl + L is the item search hotkey
-								EventWriter::Keyboard::KeyDownVK(VK_CONTROL);
+								EventWriter::Keyboard::KeyDown((char)0x1D);
 								EventWriter::Keyboard::KeyType('l', typeSpeed);
-								EventWriter::Keyboard::KeyUpVK(VK_CONTROL);
+								EventWriter::Keyboard::KeyUp((char)0x1D);
 
 								//search for forbidden idol
 								EventWriter::Keyboard::KeyType("forbidden idol", typeSpeed);
 								//buy it with enter
-								EventWriter::Keyboard::KeyTypeVK(VK_RETURN, typeSpeed);
+								EventWriter::Keyboard::KeyType((char)0x1C, typeSpeed);
 
 								//close shop with P hotkey
 								EventWriter::Keyboard::KeyType('p', typeSpeed);
@@ -184,14 +194,14 @@ int main()
 							EventWriter::Keyboard::KeyType('p', typeSpeed);
 
 							//Ctrl + L is the item search hotkey
-							EventWriter::Keyboard::KeyDownVK(VK_CONTROL);
+							EventWriter::Keyboard::KeyDown((char)0x1D);
 							EventWriter::Keyboard::KeyType('l', typeSpeed);
-							EventWriter::Keyboard::KeyUpVK(VK_CONTROL);
+							EventWriter::Keyboard::KeyUp((char)0x1D);
 
 							//search for mikael's blessing
 							EventWriter::Keyboard::KeyType("mikael's blessing", typeSpeed);
 							//buy it with enter
-							EventWriter::Keyboard::KeyTypeVK(VK_RETURN, typeSpeed);
+							EventWriter::Keyboard::KeyType((char)0x1C, typeSpeed);
 
 							//close shop with P hotkey
 							EventWriter::Keyboard::KeyType('p', typeSpeed);
@@ -203,14 +213,14 @@ int main()
 								EventWriter::Keyboard::KeyType('p', typeSpeed);
 
 								//Ctrl + L is the item search hotkey
-								EventWriter::Keyboard::KeyDownVK(VK_CONTROL);
+								EventWriter::Keyboard::KeyDown((char)0x1D);
 								EventWriter::Keyboard::KeyType('l', typeSpeed);
-								EventWriter::Keyboard::KeyUpVK(VK_CONTROL);
+								EventWriter::Keyboard::KeyUp((char)0x1D);
 
 								//search for forbidden idol
 								EventWriter::Keyboard::KeyType("forbidden idol", typeSpeed);
 								//buy it with enter
-								EventWriter::Keyboard::KeyTypeVK(VK_RETURN, typeSpeed);
+								EventWriter::Keyboard::KeyType((char)0x1C, typeSpeed);
 
 								//close shop with P hotkey
 								EventWriter::Keyboard::KeyType('p', typeSpeed);
@@ -221,14 +231,14 @@ int main()
 							EventWriter::Keyboard::KeyType('p', typeSpeed);
 
 							//Ctrl + L is the item search hotkey
-							EventWriter::Keyboard::KeyDownVK(VK_CONTROL);
+							EventWriter::Keyboard::KeyDown((char)0x1D);
 							EventWriter::Keyboard::KeyType('l', typeSpeed);
-							EventWriter::Keyboard::KeyUpVK(VK_CONTROL);
+							EventWriter::Keyboard::KeyUp((char)0x1D);
 
 							//search for ardent censor
 							EventWriter::Keyboard::KeyType("ardent censor", typeSpeed);
 							//buy it with enter
-							EventWriter::Keyboard::KeyTypeVK(VK_RETURN, typeSpeed);
+							EventWriter::Keyboard::KeyType((char)0x1C, typeSpeed);
 
 							//close shop with P hotkey
 							EventWriter::Keyboard::KeyType('p', typeSpeed);
@@ -240,14 +250,14 @@ int main()
 								EventWriter::Keyboard::KeyType('p', typeSpeed);
 
 								//Ctrl + L is the item search hotkey
-								EventWriter::Keyboard::KeyDownVK(VK_CONTROL);
+								EventWriter::Keyboard::KeyDown((char)0x1D);
 								EventWriter::Keyboard::KeyType('l', typeSpeed);
-								EventWriter::Keyboard::KeyUpVK(VK_CONTROL);
+								EventWriter::Keyboard::KeyUp((char)0x1D);
 
 								//search for forbidden idol
 								EventWriter::Keyboard::KeyType("forbidden idol", typeSpeed);
 								//buy it with enter
-								EventWriter::Keyboard::KeyTypeVK(VK_RETURN, typeSpeed);
+								EventWriter::Keyboard::KeyType((char)0x1C, typeSpeed);
 
 								//close shop with P hotkey
 								EventWriter::Keyboard::KeyType('p', typeSpeed);
@@ -258,14 +268,14 @@ int main()
 							EventWriter::Keyboard::KeyType('p', typeSpeed);
 
 							//Ctrl + L is the item search hotkey
-							EventWriter::Keyboard::KeyDownVK(VK_CONTROL);
+							EventWriter::Keyboard::KeyDown((char)0x1D);
 							EventWriter::Keyboard::KeyType('l', typeSpeed);
-							EventWriter::Keyboard::KeyUpVK(VK_CONTROL);
+							EventWriter::Keyboard::KeyUp((char)0x1D);
 
 							//search for staff of flowing water
 							EventWriter::Keyboard::KeyType("staff of flowing water", typeSpeed);
 							//buy it with enter
-							EventWriter::Keyboard::KeyTypeVK(VK_RETURN, typeSpeed);
+							EventWriter::Keyboard::KeyType((char)0x1C, typeSpeed);
 
 							//close shop with P hotkey
 							EventWriter::Keyboard::KeyType('p', typeSpeed);
@@ -277,14 +287,14 @@ int main()
 								EventWriter::Keyboard::KeyType('p', typeSpeed);
 
 								//Ctrl + L is the item search hotkey
-								EventWriter::Keyboard::KeyDownVK(VK_CONTROL);
+								EventWriter::Keyboard::KeyDown((char)0x1D);
 								EventWriter::Keyboard::KeyType('l', typeSpeed);
-								EventWriter::Keyboard::KeyUpVK(VK_CONTROL);
+								EventWriter::Keyboard::KeyUp((char)0x1D);
 
 								//search for forbidden idol
 								EventWriter::Keyboard::KeyType("forbidden idol", typeSpeed);
 								//buy it with enter
-								EventWriter::Keyboard::KeyTypeVK(VK_RETURN, typeSpeed);
+								EventWriter::Keyboard::KeyType((char)0x1C, typeSpeed);
 
 								//close shop with P hotkey
 								EventWriter::Keyboard::KeyType('p', typeSpeed);
@@ -295,14 +305,14 @@ int main()
 							EventWriter::Keyboard::KeyType('p', typeSpeed);
 
 							//Ctrl + L is the item search hotkey
-							EventWriter::Keyboard::KeyDownVK(VK_CONTROL);
+							EventWriter::Keyboard::KeyDown((char)0x1D);
 							EventWriter::Keyboard::KeyType('l', typeSpeed);
-							EventWriter::Keyboard::KeyUpVK(VK_CONTROL);
+							EventWriter::Keyboard::KeyUp((char)0x1D);
 
 							//search for shurelya's battlesong
 							EventWriter::Keyboard::KeyType("shurelya's battlesong", typeSpeed);
 							//buy it with enter
-							EventWriter::Keyboard::KeyTypeVK(VK_RETURN, typeSpeed);
+							EventWriter::Keyboard::KeyType((char)0x1C, typeSpeed);
 
 							//close shop with P hotkey
 							EventWriter::Keyboard::KeyType('p', typeSpeed);
@@ -314,14 +324,14 @@ int main()
 								EventWriter::Keyboard::KeyType('p', typeSpeed);
 
 								//Ctrl + L is the item search hotkey
-								EventWriter::Keyboard::KeyDownVK(VK_CONTROL);
+								EventWriter::Keyboard::KeyDown((char)0x1D);
 								EventWriter::Keyboard::KeyType('l', typeSpeed);
-								EventWriter::Keyboard::KeyUpVK(VK_CONTROL);
+								EventWriter::Keyboard::KeyUp((char)0x1D);
 
 								//search for bandleglass mirror
 								EventWriter::Keyboard::KeyType("bandleglass mirror", typeSpeed);
 								//buy it with enter
-								EventWriter::Keyboard::KeyTypeVK(VK_RETURN, typeSpeed);
+								EventWriter::Keyboard::KeyType((char)0x1C, typeSpeed);
 
 								//close shop with P hotkey
 								EventWriter::Keyboard::KeyType('p', typeSpeed);
@@ -377,11 +387,11 @@ int main()
 				EventWriter::Keyboard::KeyType('7', typeSpeed);
 
 				//ping mana
-				EventWriter::Keyboard::KeyDownVK(VK_CONTROL);
+				EventWriter::Keyboard::KeyDown((char)0x1D);
 				robot.leftClick(GamePixel::yuumiManaBar.x, GamePixel::yuumiManaBar.y, clickSpeed);
 				//ping E
 				robot.leftClick(GamePixel::yuumiE.x, GamePixel::yuumiE.y, clickSpeed);
-				EventWriter::Keyboard::KeyUpVK(VK_CONTROL);
+				EventWriter::Keyboard::KeyUp((char)0x1D);
 			}
 			//if attached teammate's hp is low and attached to them
 			else if (robot.getPixelDiff(GamePixel::attachedAllyLowHP.x, GamePixel::attachedAllyLowHP.y, GamePixel::attachedAllyLowHP.color, tolerance) && robot.getPixelDiff(GamePixel::attachedW.x, GamePixel::attachedW.y, GamePixel::attachedW.color, tolerance)) {
@@ -389,11 +399,11 @@ int main()
 				EventWriter::Keyboard::KeyType('e', typeSpeed);
 
 				//ping mana
-				EventWriter::Keyboard::KeyDownVK(VK_CONTROL);
+				EventWriter::Keyboard::KeyDown((char)0x1D);
 				robot.leftClick(GamePixel::yuumiManaBar.x, GamePixel::yuumiManaBar.y, clickSpeed);
 				//ping E
 				robot.leftClick(GamePixel::yuumiE.x, GamePixel::yuumiE.y, clickSpeed);
-				EventWriter::Keyboard::KeyUpVK(VK_CONTROL);
+				EventWriter::Keyboard::KeyUp((char)0x1D);
 			}
 
 			//if any ability can be lvled up
@@ -403,9 +413,9 @@ int main()
 				robot.getPixelDiff(GamePixel::canLevelUpR.x, GamePixel::canLevelUpR.y, GamePixel::canLevelUpR.color, tolerance)) {
 				//level up abilities E->W->R->Q, R and Q never get used tho
 				std::cout << "lvling up e w r q now" << std::endl << std::endl;
-				EventWriter::Keyboard::KeyDownVK(VK_CONTROL);
+				EventWriter::Keyboard::KeyDown((char)0x1D);
 				EventWriter::Keyboard::KeyType("ewrq", typeSpeed);
-				EventWriter::Keyboard::KeyUpVK(VK_CONTROL);
+				EventWriter::Keyboard::KeyUp((char)0x1D);
 			}
 		}
 		else
@@ -453,7 +463,7 @@ int main()
 						robot.leftClick(GamePixel::lobbyChatBox.x, GamePixel::lobbyChatBox.y, clickSpeed);
 						//type "supp" or "im a parasite" to the other players in the lobby
 						EventWriter::Keyboard::KeyType("im a parasite", typeSpeed);
-						EventWriter::Keyboard::KeyTypeVK(VK_RETURN, typeSpeed);
+						EventWriter::Keyboard::KeyType((char)0x1C, typeSpeed);
 
 						robot.updatePixels();
 
