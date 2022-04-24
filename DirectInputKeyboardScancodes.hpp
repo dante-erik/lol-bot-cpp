@@ -153,7 +153,7 @@ constexpr WORD DIK_MYCOMPUTER = 0xEB; /* My Computer */
 constexpr WORD DIK_MAIL = 0xEC; /* Mail */
 constexpr WORD DIK_MEDIASELECT = 0xED; /* Media Select */
 
-const WORD scancode[84] =
+constexpr WORD scancode[84] =
 {
     DIK_APOSTROPHE,
     INVALID_KEY,
