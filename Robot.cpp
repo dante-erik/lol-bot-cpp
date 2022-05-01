@@ -201,7 +201,7 @@ UINT Robot::rightClick(DWORD clickDuration) const {
 * @param keyStroke character representing the key to press
 */
 WORD Robot::getScancode(char keyStroke) {
-    return scancode[((int)keyStroke) - 39];
+    return scancode[((int)keyStroke) - 32];
 }
 
 /**
