@@ -535,7 +535,7 @@ int Robot::height() const { return _height; }
 int Robot::width() const { return _width; }
 
 //returns a psuedo random number between 0 and range, inclusive
-uint32_t Robot::getRandomNumber(const uint32_t range) {
+uint32_t Robot::getRandomNumber(const uint32_t& range) {
     uint32_t r = range + 1;
     uint32_t x = rng();
     uint64_t m = uint64_t(x) * uint64_t(r);

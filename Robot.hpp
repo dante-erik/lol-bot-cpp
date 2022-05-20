@@ -22,8 +22,6 @@ private:
     //Mersenne Twister random number generator
     std::mt19937 rng;
 
-    UINT initializeMembers();
-
     /**
      * @brief Get scancode from char
      *
@@ -291,5 +289,5 @@ public:
 
     int width() const;
 
-    uint32_t getRandomNumber(const uint32_t range);
+    uint32_t getRandomNumber(const uint32_t& range);
 };

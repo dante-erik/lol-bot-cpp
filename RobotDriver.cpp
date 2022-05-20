@@ -5,18 +5,18 @@
 #include <chrono>
 
 BOOL saveScreenshot() {
-	Robot r{};
+	std::unique_ptr<Robot> r = std::make_unique<Robot>();
 
-	r.updateScreenBuffer();
+	r->updateScreenBuffer();
 
 	std::ofstream file;
-	file.open("screen image pp3.ppm");
-	file << "P3\n" << r.width() << " " << r.height() << " 255\n";
-	for (int y = 0; y < r.height(); y++) {
-		for (int x = 0; x < r.width(); x++) {
-			file << static_cast<int>(r.getRed({ x,y })) << " "
-				<< static_cast<int>(r.getGreen({ x,y })) << " "
-				<< static_cast<int>(r.getBlue({ x,y })) << "\n";
+	file.open("screenshot image pp3.ppm");
+	file << "P3\n" << r->width() << " " << r->height() << " 255\n";
+	for (int y = 0; y < r->height(); y++) {
+		for (int x = 0; x < r->width(); x++) {
+			file << static_cast<int>(r->getRed({ x,y })) << " "
+				<< static_cast<int>(r->getGreen({ x,y })) << " "
+				<< static_cast<int>(r->getBlue({ x,y })) << "\n";
 		}
 	}
 	file.close();
@@ -26,7 +26,7 @@ BOOL saveScreenshot() {
 
 int main() {
 
-	Robot r{};
+	std::unique_ptr<Robot> r = std::make_unique<Robot>();
 
 	using namespace std::chrono;
 
@@ -41,7 +41,7 @@ int main() {
 		start_point = high_resolution_clock::now();
 
 		for (int functionCall = 0; functionCall < functionCallsPerBatch; functionCall++) {
-			r.setCursorPos({ 100,100 });
+			r->setCursorPos({ 100,100 });
 		}
 
 		end_point = high_resolution_clock::now();
