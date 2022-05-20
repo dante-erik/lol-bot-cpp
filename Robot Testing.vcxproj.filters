@@ -24,12 +24,24 @@
     <ClInclude Include="Pixel.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="LevelingBot.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelingBotPixelsAndPoints.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Robot.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="RobotDriver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelingBot.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelingBotDriver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -25,7 +25,6 @@ BOOL saveScreenshot() {
 }
 
 int main() {
-
 	std::unique_ptr<Robot> r = std::make_unique<Robot>();
 
 	using namespace std::chrono;
