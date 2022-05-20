@@ -1,20 +1,50 @@
 #include <limits>
+#include <random>
+#include <chrono>
 
 #include "Robot.hpp"
 #include "Pixel.hpp"
 #include "DirectInputKeyboardScancodes.hpp"
 
+using namespace std::chrono;
+
 INPUT Robot::mouseInput;
 INPUT Robot::keyboardInput;
 
-Robot::Robot() {
+Robot::Robot()
+    //seed the random number generator with time since epoch
+    : rng(duration_cast<nanoseconds>(system_clock::now().time_since_epoch()).count()),
+    // get the desktop device context
+    hdc(GetDC(NULL)),
+    // create a device context to use yourself
+    cdc(CreateCompatibleDC(hdc)),
+    // get the width and height of the screen
+    _height(GetSystemMetrics(SM_CYSCREEN)),
+    _width(GetSystemMetrics(SM_CXSCREEN)),
+    // create a bitmap
+    hbitmap(CreateCompatibleBitmap(hdc, _width, _height)),
+    bmi({ 0 }),
+    screen(new RGBQUAD[_width * _height])
+{
+    // use the previously created device context with the bitmap
+    SelectObject(cdc, hbitmap);
+
+    bmi.biSize = sizeof(BITMAPINFOHEADER);
+    bmi.biPlanes = 1;
+    bmi.biBitCount = 32;
+    bmi.biWidth = _width;
+    // flip image upright
+    bmi.biHeight = -1 * _height;
+    bmi.biCompression = BI_RGB;
+    bmi.biSizeImage = 3 * _width * _height;
+
     ZeroMemory(&mouseInput, sizeof(mouseInput));
     ZeroMemory(&keyboardInput, sizeof(keyboardInput));
     mouseInput.type = INPUT_MOUSE;
     keyboardInput.type = INPUT_KEYBOARD;
-
-    initializeMembers();
 }
+
+
 
 Robot::~Robot() {
     //release ScreenCapturing memory
@@ -24,24 +54,24 @@ Robot::~Robot() {
     DeleteDC(cdc);
 }
 
-UINT Robot::initializeMembers() {
-    hdc = GetDC(NULL); // get the desktop device context
-    cdc = CreateCompatibleDC(hdc); // create a device context to use yourself
-    _height = (int)GetSystemMetrics(SM_CYSCREEN); // get the width and height of the screen
-    _width = (int)GetSystemMetrics(SM_CXSCREEN);
-    hbitmap = CreateCompatibleBitmap(hdc, _width, _height); // create a bitmap
-    SelectObject(cdc, hbitmap); // use the previously created device context with the bitmap
-    bmi = { 0 };
-    bmi.biSize = sizeof(BITMAPINFOHEADER);
-    bmi.biPlanes = 1;
-    bmi.biBitCount = 32;
-    bmi.biWidth = _width;
-    bmi.biHeight = -_height; // flip image upright
-    bmi.biCompression = BI_RGB;
-    bmi.biSizeImage = 3 * _width * _height;
-    screen = new RGBQUAD[_width * _height];
-    return (UINT)0;
-}
+//UINT Robot::initializeMembers() {
+//    hdc = GetDC(NULL); // get the desktop device context
+//    cdc = CreateCompatibleDC(hdc); // create a device context to use yourself
+//    _height = GetSystemMetrics(SM_CYSCREEN); // get the width and height of the screen
+//    _width = GetSystemMetrics(SM_CXSCREEN);
+//    hbitmap = CreateCompatibleBitmap(hdc, _width, _height); // create a bitmap
+//    SelectObject(cdc, hbitmap); // use the previously created device context with the bitmap
+//    bmi = { 0 };
+//    bmi.biSize = sizeof(BITMAPINFOHEADER);
+//    bmi.biPlanes = 1;
+//    bmi.biBitCount = 32;
+//    bmi.biWidth = _width;
+//    bmi.biHeight = -_height; // flip image upright
+//    bmi.biCompression = BI_RGB;
+//    bmi.biSizeImage = 3 * _width * _height;
+//    screen = new RGBQUAD[_width * _height];
+//    return (UINT)0;
+//}
 
 // Mouse
 /**
@@ -503,3 +533,11 @@ BOOL Robot::isPixelEqual(const Pixel& pix) const {
 int Robot::height() const { return _height; }
 
 int Robot::width() const { return _width; }
+
+//returns a psuedo random number between 0 and range, inclusive
+uint32_t Robot::getRandomNumber(const uint32_t range) {
+    uint32_t r = range + 1;
+    uint32_t x = rng();
+    uint64_t m = uint64_t(x) * uint64_t(r);
+    return m >> 32;
+}

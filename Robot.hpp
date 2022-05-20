@@ -1,5 +1,6 @@
 #pragma once
 #include <Windows.h>
+#include <random>
 #include "Pixel.hpp"
 
 class Robot
@@ -17,6 +18,9 @@ private:
     HBITMAP hbitmap; // create a bitmap
     BITMAPINFOHEADER bmi;
     RGBQUAD* screen;
+
+    //Mersenne Twister random number generator
+    std::mt19937 rng;
 
     UINT initializeMembers();
 
@@ -286,4 +290,6 @@ public:
     int height() const;
 
     int width() const;
+
+    uint32_t getRandomNumber(const uint32_t range);
 };
