@@ -16,6 +16,7 @@ private:
 	//outOfGameBot = std::make_unique<OutOfGameBot>();
 
 	BOOL playGame();
+	BOOL startInGameTimer();
 	BOOL attack();
 	BOOL buyItems();
 	BOOL backToBase();

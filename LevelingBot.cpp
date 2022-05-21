@@ -8,13 +8,13 @@
 using namespace std::chrono;
 
 LevelingBot::LevelingBot()
-	: health(0.0),
+	: health(),
 	tolerance(0),
-	keyClickDuration(70),
-	keyClickDurationRandomness(20),
-	mouseClickDuration(60),
-	mouseClickDurationRandomness(15),
-	gameStart(steady_clock::now()),
+	keyClickDuration(140),
+	keyClickDurationRandomness(60),
+	mouseClickDuration(70),
+	mouseClickDurationRandomness(30),
+	gameStart(),
 	robot(std::make_unique<Robot>())
 	//outOfGameBot(std::make_unique<OutOfGameBot>())
 { }
@@ -37,7 +37,7 @@ void LevelingBot::runBot() {
 
 BOOL LevelingBot::playGame() {
 	if (isNewGame()) {
-		gameStart = steady_clock::now();
+		startInGameTimer();
 		buyItems();
 	}
 
@@ -54,9 +54,14 @@ BOOL LevelingBot::playGame() {
 	}
 }
 
+BOOL LevelingBot::startInGameTimer() {
+	gameStart = steady_clock::now();
+	return 1;
+}
+
 BOOL LevelingBot::attack() {
 	robot->keyClick('a', getKeyClickDuration());
-	robot->leftClick(getSafeAttackLocation(), getMouseClickDuration());
+	return robot->leftClick(getSafeAttackLocation(), getMouseClickDuration());
 }
 
 BOOL LevelingBot::backToBase() {
@@ -90,12 +95,16 @@ BOOL LevelingBot::buyItem(const char* itemName) {
 }
 
 BOOL LevelingBot::isChampAlive() {
-	return !(robot->isPixelSimilar(SHOP_BRIGHT) && health < .05);
+	//shop lights up as soon as you die
+	//it isn't health > .00 because there's a bug
+	//you can gain hp in the health bar after you die
+	return !robot->isPixelSimilar(SHOP_BRIGHT) || health > .05;
 }
 
 BOOL LevelingBot::isChampStandingOnPoint(POINT p) {
 	LONG xOffset = 0, yOffset = 0;
-	//checks if the bottom left and top right corners of the minimap's champion camera white box to see if the champion is centered on the point p
+	//checks if the bottom left and top right corners of the minimap's champion
+	//camera white box to see if the champion is centered on the point p
 	//snaps camera to champion
 	return robot->isPixelSimilar(Pixel{ {p.x - xOffset, p.y - yOffset}, 255, 255, 255 }, tolerance) && robot->isPixelSimilar(Pixel{ {p.x + xOffset, p.y + yOffset}, 255, 255, 255 }, tolerance);
 }
@@ -105,7 +114,8 @@ BOOL LevelingBot::isChampInBase() {
 }
 
 POINT LevelingBot::getSafeRecallLocation() {
-	//if there isn't fog of war, the tower should still be standing so it's safe to recall
+	//if there isn't fog of war,
+	//the tower should still be standing so it's safe to recall
 	if (!robot->isPixelSimilar(FOW_ALLY_MID_TOWER_1, tolerance)) {
 		return SAFE_RECALL_MID_TOWER_1;
 	}
@@ -122,7 +132,8 @@ POINT LevelingBot::getSafeRecallLocation() {
 }
 
 BOOL LevelingBot::buyItems() {
-	//if 2nd item bought, don't re-buy dorans shield after selling it after buying the 6th item
+	//if 2nd item bought,
+	//don't re-buy dorans shield after selling it after buying the 6th item
 	if (robot->isPixelSimilar(EMPTY_ITEM_SLOT_1, tolerance) && robot->isPixelSimilar(EMPTY_ITEM_SLOT_2, tolerance)) {
 		buyItem("dorans shield");
 		return 1;
@@ -180,7 +191,7 @@ POINT LevelingBot::getSafeAttackLocation() {
 	else if (robot->isPixelSimilar(FOW_MID_TOWER_3, tolerance)) {
 		return SAFE_ATTACK_MID_TOWER_3;
 	}
-	else if (robot->isPixelSimilar(FOW_NEXUS_TOWER_1, tolerance) || robot->isPixelSimilar(FOW_NEXUS_TOWER_2, tolerance)) {
+	else if (robot->isPixelSimilar(FOW_NEXUS_TOWERS, tolerance)) {
 		return SAFE_ATTACK_NEXUS_TOWERS;
 	}
 	else {
@@ -189,19 +200,19 @@ POINT LevelingBot::getSafeAttackLocation() {
 }
 
 BOOL LevelingBot::levelUpAbilities() {
-	if (robot->isPixelSimilar(CAN_LEVEL_UP_R, tolerance)) {
+	if (robot->isPixelSimilar(CAN_LEVEL_UP_R, tolerance + 10)) {
 		robot->ctrlPlusKeyClick('r', getKeyClickDuration());
 		return 4;
 	}
-	else if (robot->isPixelSimilar(CAN_LEVEL_UP_Q, tolerance)) {
+	else if (robot->isPixelSimilar(CAN_LEVEL_UP_Q, tolerance + 10)) {
 		robot->ctrlPlusKeyClick('q', getKeyClickDuration());
 		return 1;
 	}
-	else if (robot->isPixelSimilar(CAN_LEVEL_UP_E, tolerance)) {
+	else if (robot->isPixelSimilar(CAN_LEVEL_UP_E, tolerance) + 10) {
 		robot->ctrlPlusKeyClick('e', getKeyClickDuration());
 		return 3;
 	}
-	else if (robot->isPixelSimilar(CAN_LEVEL_UP_W, tolerance)) {
+	else if (robot->isPixelSimilar(CAN_LEVEL_UP_W, tolerance) + 10) {
 		robot->ctrlPlusKeyClick('w', getKeyClickDuration());
 		return 2;
 	}
@@ -224,7 +235,7 @@ steady_clock::time_point LevelingBot::getGameTime() {
 }
 
 BOOL LevelingBot::updateHealth() {
-	const BYTE greenThreshold = 110;
+	const BYTE greenThreshold = 50;
 	for (int xOffset = 0; xOffset < FULL_HEALTH.p.x - ZERO_HEALTH.p.x; xOffset+=4) {
 		if (robot->getGreen({ ZERO_HEALTH.p.x + xOffset, ZERO_HEALTH.p.y }) < greenThreshold) {
 			health = (double)xOffset / (FULL_HEALTH.p.x - ZERO_HEALTH.p.x);
