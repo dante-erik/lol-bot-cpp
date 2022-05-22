@@ -14,7 +14,7 @@ LevelingBot::LevelingBot()
 	keyClickDurationRandomness(60),
 	mouseClickDuration(70),
 	mouseClickDurationRandomness(30),
-	gameStart(),
+	gameStart(steady_clock::now()),
 	robot(std::make_unique<Robot>())
 	//outOfGameBot(std::make_unique<OutOfGameBot>())
 { }
@@ -29,9 +29,12 @@ void LevelingBot::runBot() {
 			playGame();
 		}
 		else if (robot->isPixelSimilar(CLIENT_BORDER, tolerance)) {
+			std::cout << "out of game stuff" << std::endl;
 			//outOfGameBot->clientActions();
 		}
-		else { }
+		else {
+			std::cout << "nothing visible" << std::endl;
+		}
 	}
 }
 
@@ -46,11 +49,11 @@ BOOL LevelingBot::playGame() {
 	if (health < .3) {
 		backToBase();
 		buyItems();
-		waitForFullHealth();
+		return waitForFullHealth();
 	}
 	else {
 		attack();
-		levelUpAbilities();
+		return levelUpAbilities();
 	}
 }
 
@@ -61,7 +64,7 @@ BOOL LevelingBot::startInGameTimer() {
 
 BOOL LevelingBot::attack() {
 	robot->keyClick('a', getKeyClickDuration());
-	return robot->leftClick(getSafeAttackLocation(), getMouseClickDuration());
+	return robot->leftClick(pointJitter(getSafeAttackLocation(), 1), getMouseClickDuration());
 }
 
 BOOL LevelingBot::backToBase() {
@@ -102,11 +105,17 @@ BOOL LevelingBot::isChampAlive() {
 }
 
 BOOL LevelingBot::isChampStandingOnPoint(POINT p) {
-	LONG xOffset = 0, yOffset = 0;
-	//checks if the bottom left and top right corners of the minimap's champion
+	constexpr LONG xLeftOffset = -34, yLeftOffset = -24, xRightOffset = 35, yRightOffset = 12;
+	//set camera position on champion (F1 hotkey) so the offsets listed above are correct
+	robot->fKeyDown(1);
+	Sleep(getKeyClickDuration());
+	robot->updateScreenBuffer();
+	robot->fKeyUp(1);
+
+	//checks if the top left and bottom right corners of the minimap's champion
 	//camera white box to see if the champion is centered on the point p
-	//snaps camera to champion
-	return robot->isPixelSimilar(Pixel{ {p.x - xOffset, p.y - yOffset}, 255, 255, 255 }, tolerance) && robot->isPixelSimilar(Pixel{ {p.x + xOffset, p.y + yOffset}, 255, 255, 255 }, tolerance);
+	return robot->isPixelSimilar(Pixel{ {p.x + xLeftOffset, p.y + yLeftOffset}, 255, 255, 255 }, tolerance) &&
+		   robot->isPixelSimilar(Pixel{ {p.x + xRightOffset, p.y + yRightOffset}, 255, 255, 255 }, tolerance);
 }
 
 BOOL LevelingBot::isChampInBase() {
@@ -135,11 +144,21 @@ BOOL LevelingBot::buyItems() {
 	//if 2nd item bought,
 	//don't re-buy dorans shield after selling it after buying the 6th item
 	if (robot->isPixelSimilar(EMPTY_ITEM_SLOT_1, tolerance) && robot->isPixelSimilar(EMPTY_ITEM_SLOT_2, tolerance)) {
-		buyItem("dorans shield");
+		if (robot->getRandomNumber(1)) {
+			buyItem("dorans shield");
+		}
+		else {
+			buyItem("dorans blade");
+		}
 		return 1;
 	}
 	else if (robot->isPixelSimilar(EMPTY_ITEM_SLOT_2, tolerance)) {
-		buyItem("immortal shieldbow");
+		if (robot->getRandomNumber(1)) {
+			buyItem("kraken slayer");
+		}
+		else {
+			buyItem("immortal shieldbow");
+		}
 		return 2;
 	}
 	else if (robot->isPixelSimilar(EMPTY_ITEM_SLOT_3, tolerance)) {
@@ -147,7 +166,12 @@ BOOL LevelingBot::buyItems() {
 		return 3;
 	}
 	else if (robot->isPixelSimilar(EMPTY_ITEM_SLOT_4, tolerance)) {
-		buyItem("phantom dancer");
+		if (robot->getRandomNumber(1)) {
+			buyItem("phantom dancer");
+		}
+		else {
+			buyItem("mortal reminder");
+		}
 		return 4;
 	}
 	else if (robot->isPixelSimilar(EMPTY_ITEM_SLOT_5, tolerance)) {
@@ -173,25 +197,20 @@ BOOL LevelingBot::buyItems() {
 }
 
 BOOL LevelingBot::sellItem1() {
-	robot->rightClick(EMPTY_ITEM_SLOT_1.p, getMouseClickDuration());
+	return robot->rightClick(EMPTY_ITEM_SLOT_1.p, getMouseClickDuration());
 }
 
 POINT LevelingBot::getSafeAttackLocation() {
-	//try to end game if more than 29 mins passed
-	if (duration_cast<minutes>(getGameTime().time_since_epoch()) > minutes(29)) {
-		return SAFE_ATTACK_NEXUS;
-	}
-	else if (robot->isPixelSimilar(FOW_MID_TOWER_1, tolerance)) {
-		//just a point not a pixel
-		return SAFE_ATTACK_MID_TOWER_1;
-	}
-	else if (robot->isPixelSimilar(FOW_MID_TOWER_2, tolerance)) {
-		return SAFE_ATTACK_MID_TOWER_2;
-	}
-	else if (robot->isPixelSimilar(FOW_MID_TOWER_3, tolerance)) {
-		return SAFE_ATTACK_MID_TOWER_3;
-	}
-	else if (robot->isPixelSimilar(FOW_NEXUS_TOWERS, tolerance)) {
+	if (robot->isPixelSimilar(FOW_NEXUS_TOWERS, tolerance)) {
+		if (robot->isPixelSimilar(FOW_MID_TOWER_3, tolerance)) {
+			if (robot->isPixelSimilar(FOW_MID_TOWER_2, tolerance)) {
+				if (robot->isPixelSimilar(FOW_MID_TOWER_1, tolerance)) {
+					return SAFE_ATTACK_MID_TOWER_1;
+				}
+				return SAFE_ATTACK_MID_TOWER_2;
+			}
+			return SAFE_ATTACK_MID_TOWER_3;
+		}
 		return SAFE_ATTACK_NEXUS_TOWERS;
 	}
 	else {
@@ -199,22 +218,14 @@ POINT LevelingBot::getSafeAttackLocation() {
 	}
 }
 
+POINT LevelingBot::pointJitter(const POINT& p, const int& distanceFromPoint) {
+	return POINT{ p.x - distanceFromPoint + static_cast<int32_t>(robot->getRandomNumber(2 * distanceFromPoint)),
+				  p.y - distanceFromPoint + static_cast<int32_t>(robot->getRandomNumber(2 * distanceFromPoint)) };
+}
+
 BOOL LevelingBot::levelUpAbilities() {
-	if (robot->isPixelSimilar(CAN_LEVEL_UP_R, tolerance + 10)) {
-		robot->ctrlPlusKeyClick('r', getKeyClickDuration());
-		return 4;
-	}
-	else if (robot->isPixelSimilar(CAN_LEVEL_UP_Q, tolerance + 10)) {
-		robot->ctrlPlusKeyClick('q', getKeyClickDuration());
-		return 1;
-	}
-	else if (robot->isPixelSimilar(CAN_LEVEL_UP_E, tolerance) + 10) {
-		robot->ctrlPlusKeyClick('e', getKeyClickDuration());
-		return 3;
-	}
-	else if (robot->isPixelSimilar(CAN_LEVEL_UP_W, tolerance) + 10) {
-		robot->ctrlPlusKeyClick('w', getKeyClickDuration());
-		return 2;
+	if (robot->isPixelSimilar(CAN_LEVEL_UP_ABILITY, tolerance)) {
+		return robot->ctrlPlusKeyClick("rqwe", getKeyClickDuration());
 	}
 	return 0;
 }
@@ -224,6 +235,7 @@ BOOL LevelingBot::waitForFullHealth() {
 		robot->updateScreenBuffer();
 		updateHealth();
 	}
+	return 1;
 }
 
 BOOL LevelingBot::isNewGame() {

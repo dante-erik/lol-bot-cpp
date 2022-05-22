@@ -22,6 +22,7 @@ private:
 	BOOL backToBase();
 	BOOL levelUpAbilities();
 	POINT getSafeAttackLocation();
+	POINT pointJitter(const POINT& p, const int& distanceFromPoint);
 	BOOL updateHealth();
 	BOOL buyItem(const char* itemName);
 	BOOL isChampAlive();
