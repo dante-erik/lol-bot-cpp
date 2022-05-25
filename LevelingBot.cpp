@@ -8,7 +8,7 @@
 using namespace std::chrono;
 
 LevelingBot::LevelingBot()
-	: health(),
+	: health(1.0),
 	tolerance(0),
 	keyClickDuration(140),
 	keyClickDurationRandomness(60),
@@ -16,7 +16,7 @@ LevelingBot::LevelingBot()
 	mouseClickDurationRandomness(30),
 	gameStart(steady_clock::now()),
 	robot(std::make_unique<Robot>())
-	//outOfGameBot(std::make_unique<OutOfGameBot>())
+	//clientBot(std::make_unique<LevelingClientBot>())
 { }
 
 LevelingBot::~LevelingBot() { }
@@ -46,7 +46,7 @@ bool LevelingBot::playGame() {
 
 	updateHealth();
 
-	if (health < .3) {
+	if (health < .42) {
 		backToBase();
 		buyItems();
 		waitForFullHealth();
@@ -68,11 +68,13 @@ bool LevelingBot::attack() {
 	return static_cast<bool>(robot->leftClick(pointJitter(getSafeAttackLocation(), 1), getMouseClickDuration()));
 }
 
+//if in base at end of function return true, else false
 bool LevelingBot::backToBase() {
-	POINT recallLocation = getSafeRecallLocation();;
+	POINT recallLocation = getSafeRecallLocation();
 	//move to safety
 	while (isChampAlive() && !isChampStandingOnPoint(recallLocation)) {
 		robot->rightClick(getSafeRecallLocation(), getMouseClickDuration());
+
 		robot->updateScreenBuffer();
 		updateHealth();
 	}
@@ -80,6 +82,7 @@ bool LevelingBot::backToBase() {
 	//recall if you didnt die and you are not in base
 	while (isChampAlive() && !isChampInBase()) {
 		robot->keyClick('b', getKeyClickDuration());
+
 		Sleep(1000 + getKeyClickDuration());
 		robot->updateScreenBuffer();
 		updateHealth();

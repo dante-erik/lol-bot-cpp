@@ -13,12 +13,12 @@ private:
 	const int mouseClickDurationRandomness;
 	std::chrono::steady_clock::time_point gameStart;
     std::unique_ptr<Robot> robot;
-	//outOfGameBot = std::make_unique<OutOfGameBot>();
+	//std::unique_ptr<LevelingClientBot> clientBot;
 
 	bool playGame();
 	bool startInGameTimer();
 	bool attack();
-	bool buyItems();
+	int32_t buyItems();
 	bool backToBase();
 	bool levelUpAbilities();
 	POINT getSafeAttackLocation();
