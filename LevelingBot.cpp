@@ -38,7 +38,7 @@ void LevelingBot::runBot() {
 	}
 }
 
-BOOL LevelingBot::playGame() {
+bool LevelingBot::playGame() {
 	if (isNewGame()) {
 		startInGameTimer();
 		buyItems();
@@ -49,62 +49,66 @@ BOOL LevelingBot::playGame() {
 	if (health < .3) {
 		backToBase();
 		buyItems();
-		return waitForFullHealth();
+		waitForFullHealth();
 	}
 	else {
 		attack();
-		return levelUpAbilities();
+		levelUpAbilities();
 	}
+	return true;
 }
 
-BOOL LevelingBot::startInGameTimer() {
+bool LevelingBot::startInGameTimer() {
 	gameStart = steady_clock::now();
-	return 1;
+	return true;
 }
 
-BOOL LevelingBot::attack() {
+bool LevelingBot::attack() {
 	robot->keyClick('a', getKeyClickDuration());
-	return robot->leftClick(pointJitter(getSafeAttackLocation(), 1), getMouseClickDuration());
+	return static_cast<bool>(robot->leftClick(pointJitter(getSafeAttackLocation(), 1), getMouseClickDuration()));
 }
 
-BOOL LevelingBot::backToBase() {
+bool LevelingBot::backToBase() {
 	POINT recallLocation = getSafeRecallLocation();;
 	//move to safety
-	while (isChampAlive() && !isChampStandingOnPoint(recallLocation) && !isChampInBase()) {
+	while (isChampAlive() && !isChampStandingOnPoint(recallLocation)) {
 		robot->rightClick(getSafeRecallLocation(), getMouseClickDuration());
 		robot->updateScreenBuffer();
+		updateHealth();
 	}
-	//recall if you didnt walk back to base or die
+
+	//recall if you didnt die and you are not in base
 	while (isChampAlive() && !isChampInBase()) {
 		robot->keyClick('b', getKeyClickDuration());
-		Sleep(1000);
+		Sleep(1000 + getKeyClickDuration());
 		robot->updateScreenBuffer();
+		updateHealth();
 	}
 
-	if (isChampAlive() && isChampInBase()) {
-		return 2;
+	robot->updateScreenBuffer();
+	if (isChampInBase()) {
+		return true;
 	}
-
-	return 1;
+	else {
+		return false;
+	}
 }
 
-BOOL LevelingBot::buyItem(const char* itemName) {
+bool LevelingBot::buyItem(const char* itemName) {
 	robot->keyClick('p', getKeyClickDuration());
 	robot->ctrlPlusKeyClick('l', getKeyClickDuration());
 	robot->keyClick(itemName, getKeyClickDuration());
 	robot->enterKeyClick(getKeyClickDuration());
-	robot->escapeKeyClick(getKeyClickDuration());
-	return 1;
+	return static_cast<bool>(robot->escapeKeyClick(getKeyClickDuration()));
 }
 
-BOOL LevelingBot::isChampAlive() {
-	//shop lights up as soon as you die
-	//it isn't health > .00 because there's a bug
-	//you can gain hp in the health bar after you die
-	return !robot->isPixelSimilar(SHOP_BRIGHT) || health > .05;
+bool LevelingBot::isChampAlive() {
+	//health > .00 is unreliable because there's a bug
+	//in-game where you can gain hp in the health bar after you die
+	return !isChampInBase() || health > .03;
 }
 
-BOOL LevelingBot::isChampStandingOnPoint(POINT p) {
+bool LevelingBot::isChampStandingOnPoint(POINT p) {
 	constexpr LONG xLeftOffset = -34, yLeftOffset = -24, xRightOffset = 35, yRightOffset = 12;
 	//set camera position on champion (F1 hotkey) so the offsets listed above are correct
 	robot->fKeyDown(1);
@@ -118,7 +122,7 @@ BOOL LevelingBot::isChampStandingOnPoint(POINT p) {
 		   robot->isPixelSimilar(Pixel{ {p.x + xRightOffset, p.y + yRightOffset}, 255, 255, 255 }, tolerance);
 }
 
-BOOL LevelingBot::isChampInBase() {
+bool LevelingBot::isChampInBase() {
 	return robot->isPixelSimilar(SHOP_BRIGHT, tolerance);
 }
 
@@ -140,7 +144,9 @@ POINT LevelingBot::getSafeRecallLocation() {
 	}
 }
 
-BOOL LevelingBot::buyItems() {
+//returns positive if item bought, negative if item sold, number is the item slot from 1 to 6 inclusive
+//full build returns 0, no items bought or sold
+int32_t LevelingBot::buyItems() {
 	//if 2nd item bought,
 	//don't re-buy dorans shield after selling it after buying the 6th item
 	if (robot->isPixelSimilar(EMPTY_ITEM_SLOT_1, tolerance) && robot->isPixelSimilar(EMPTY_ITEM_SLOT_2, tolerance)) {
@@ -188,7 +194,7 @@ BOOL LevelingBot::buyItems() {
 	}
 	else if (robot->isPixelSimilar(EMPTY_ITEM_SLOT_1, tolerance)) {
 		buyItem("rapidfire cannon");
-		return 7;
+		return 1;
 	}
 	else {
 		//full build!
@@ -196,8 +202,8 @@ BOOL LevelingBot::buyItems() {
 	}
 }
 
-BOOL LevelingBot::sellItem1() {
-	return robot->rightClick(EMPTY_ITEM_SLOT_1.p, getMouseClickDuration());
+bool LevelingBot::sellItem1() {
+	return static_cast<bool>(robot->rightClick(EMPTY_ITEM_SLOT_1.p, getMouseClickDuration()));
 }
 
 POINT LevelingBot::getSafeAttackLocation() {
@@ -219,43 +225,46 @@ POINT LevelingBot::getSafeAttackLocation() {
 }
 
 POINT LevelingBot::pointJitter(const POINT& p, const int& distanceFromPoint) {
-	return POINT{ p.x - distanceFromPoint + static_cast<int32_t>(robot->getRandomNumber(2 * distanceFromPoint)),
-				  p.y - distanceFromPoint + static_cast<int32_t>(robot->getRandomNumber(2 * distanceFromPoint)) };
+	return POINT{ p.x - distanceFromPoint +
+		          static_cast<int32_t>(robot->getRandomNumber(2 * distanceFromPoint)),
+				  p.y - distanceFromPoint +
+		          static_cast<int32_t>(robot->getRandomNumber(2 * distanceFromPoint)) };
 }
 
-BOOL LevelingBot::levelUpAbilities() {
+bool LevelingBot::levelUpAbilities() {
 	if (robot->isPixelSimilar(CAN_LEVEL_UP_ABILITY, tolerance)) {
-		return robot->ctrlPlusKeyClick("rqwe", getKeyClickDuration());
+		return static_cast<bool>(robot->ctrlPlusKeyClick("rqwe", getKeyClickDuration()));
 	}
-	return 0;
+	return false;
 }
 
-BOOL LevelingBot::waitForFullHealth() {
+bool LevelingBot::waitForFullHealth() {
 	while (health < .95 && isChampInBase()) {
 		robot->updateScreenBuffer();
 		updateHealth();
 	}
-	return 1;
+	return true;
 }
 
-BOOL LevelingBot::isNewGame() {
-	return (robot->isPixelSimilar(EMPTY_ITEM_SLOT_1, tolerance) && robot->isPixelSimilar(EMPTY_ITEM_SLOT_2, tolerance));
+bool LevelingBot::isNewGame() {
+	return (robot->isPixelSimilar(EMPTY_ITEM_SLOT_1, tolerance) &&
+		    robot->isPixelSimilar(EMPTY_ITEM_SLOT_2, tolerance));
 }
 
 steady_clock::time_point LevelingBot::getGameTime() {
 	return steady_clock::time_point(steady_clock::now() - gameStart);
 }
 
-BOOL LevelingBot::updateHealth() {
+bool LevelingBot::updateHealth() {
 	const BYTE greenThreshold = 50;
 	for (int xOffset = 0; xOffset < FULL_HEALTH.p.x - ZERO_HEALTH.p.x; xOffset+=4) {
 		if (robot->getGreen({ ZERO_HEALTH.p.x + xOffset, ZERO_HEALTH.p.y }) < greenThreshold) {
 			health = (double)xOffset / (FULL_HEALTH.p.x - ZERO_HEALTH.p.x);
-			return 2;
+			return true;
 		}
 	}
 	health = 1.0;
-	return 1;
+	return true;
 }
 
 int LevelingBot::getMouseClickDuration() {
