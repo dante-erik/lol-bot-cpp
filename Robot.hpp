@@ -275,7 +275,7 @@ public:
      * @param tolerance Value at which (or below) the difference is negligible
      * @return BOOL true - close enough; false - different
      */
-    BOOL isPixelSimilar(const Pixel& pix, unsigned short tolerance = 0.1) const;
+    bool isPixelSimilar(const Pixel& pix, unsigned short tolerance = 0.1) const;
 
     /**
      * @brief Determines if the provided Pixel matches the Screen Buffer
@@ -283,7 +283,7 @@ public:
      * @param pix Pixel to compare to the screen buffer
      * @return BOOL true - equivalent; false - not equivalent
      */
-    BOOL isPixelEqual(const Pixel& pix) const;
+    bool isPixelEqual(const Pixel& pix) const;
 
     int height() const;
 

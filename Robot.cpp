@@ -516,7 +516,7 @@ BYTE abs_diff(BYTE x, BYTE y) {
  * @param tolerance Value at which (or below) the difference is negligible
  * @return BOOL true - close enough; false - different
  */
-BOOL Robot::isPixelSimilar(const Pixel& pix, unsigned short tolerance) const {
+bool Robot::isPixelSimilar(const Pixel& pix, unsigned short tolerance) const {
     return (abs_diff(getRed(pix.p), pix.r) + abs_diff(getGreen(pix.p), pix.g) + abs_diff(getBlue(pix.p), pix.b)) <= 3 * tolerance;
 }
 
@@ -526,7 +526,7 @@ BOOL Robot::isPixelSimilar(const Pixel& pix, unsigned short tolerance) const {
  * @param pix Pixel to compare to the screen buffer
  * @return BOOL true - equivalent; false - not equivalent
  */
-BOOL Robot::isPixelEqual(const Pixel& pix) const {
+bool Robot::isPixelEqual(const Pixel& pix) const {
     return (getRed(pix.p) == pix.r) && (getGreen(pix.p) == pix.g) && (getBlue(pix.p) == pix.b);
 }
 
