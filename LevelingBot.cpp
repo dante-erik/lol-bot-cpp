@@ -232,8 +232,11 @@ POINT LevelingBot::getSafeAttackLocation() {
 	if (robot->isPixelSimilar(FOW_NEXUS_TOWERS, tolerance)) {
 		if (robot->isPixelSimilar(FOW_MID_TOWER_3, tolerance)) {
 			if (robot->isPixelSimilar(FOW_MID_TOWER_2, tolerance)) {
-				if (robot->isPixelSimilar(FOW_MID_TOWER_1, tolerance)) {
-					return SAFE_ATTACK_MID_TOWER_1;
+				if (robot->isPixelSimilar(FOW_MID_TOWER_1_B, tolerance)) {
+					if (robot->isPixelSimilar(FOW_MID_TOWER_1_A, tolerance)) {
+						return SAFE_ATTACK_MID_TOWER_1_A;
+					}
+					return SAFE_ATTACK_MID_TOWER_1_B;
 				}
 				return SAFE_ATTACK_MID_TOWER_2;
 			}
