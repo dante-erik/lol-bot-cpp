@@ -5,7 +5,7 @@
 
 class LevelingBot {
 private:
-	double health;
+	double health, mana;
 	const int tolerance;
 	const int keyClickDuration;
 	const int keyClickDurationRandomness;
@@ -24,6 +24,8 @@ private:
 	POINT getSafeAttackLocation();
 	POINT pointJitter(const POINT& p, const int& distanceFromPoint);
 	bool updateHealth();
+	bool updateMana();
+	bool castAbilities(const char* abilities);
 	bool buyItem(const char* itemName);
 	bool isChampAlive();
 	bool isChampStandingOnPoint(POINT p);

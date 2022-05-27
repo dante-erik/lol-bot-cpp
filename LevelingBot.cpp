@@ -9,6 +9,7 @@ using namespace std::chrono;
 
 LevelingBot::LevelingBot()
 	: health(1.0),
+	mana(1.0),
 	tolerance(0),
 	keyClickDuration(140),
 	keyClickDurationRandomness(60),
@@ -64,6 +65,23 @@ bool LevelingBot::startInGameTimer() {
 }
 
 bool LevelingBot::attack() {
+	//ability casting section
+	//health < 0.95 (in combat)
+	//q or w usable, otherwise updating mana is a waste of time
+	if (health < 0.95 &&
+	   (robot->isPixelSimilar(Q_USABLE, tolerance) ||
+		robot->isPixelSimilar(W_USABLE, tolerance))) {
+		updateMana();
+		if (mana > 0.2) {
+			if (robot->isPixelSimilar(Q_USABLE, tolerance)) {
+				castAbilities("q");
+			}
+			if (robot->isPixelSimilar(W_USABLE, tolerance)) {
+				castAbilities("w");
+			}
+		}
+	}
+	//basic attacking section
 	robot->keyClick('a', getKeyClickDuration());
 	return static_cast<bool>(robot->leftClick(pointJitter(getSafeAttackLocation(), 1), getMouseClickDuration()));
 }
@@ -259,15 +277,42 @@ steady_clock::time_point LevelingBot::getGameTime() {
 }
 
 bool LevelingBot::updateHealth() {
-	const BYTE greenThreshold = 50;
-	for (int xOffset = 0; xOffset < FULL_HEALTH.p.x - ZERO_HEALTH.p.x; xOffset+=4) {
+	//minimum green value in the health bar for it be considered health vs empty
+	constexpr BYTE greenThreshold = 50;
+	//higher value, faster performance, lower accuracy on returned health value
+	int offsetIterator = 4;
+	for (int xOffset = 0; xOffset < FULL_HEALTH.p.x - ZERO_HEALTH.p.x; xOffset += offsetIterator) {
 		if (robot->getGreen({ ZERO_HEALTH.p.x + xOffset, ZERO_HEALTH.p.y }) < greenThreshold) {
-			health = (double)xOffset / (FULL_HEALTH.p.x - ZERO_HEALTH.p.x);
+			health = static_cast<double>(xOffset) / (FULL_HEALTH.p.x - ZERO_HEALTH.p.x);
 			return true;
 		}
 	}
 	health = 1.0;
 	return true;
+}
+
+bool LevelingBot::updateMana() {
+	//minimum blue value in the mana bar for it to be considered mana vs empty
+	constexpr BYTE blueThreshold = 80;
+	//higher value, faster performance, lower accuracy on returned mana value
+	int offsetIterator = 20;
+	for (int xOffset = 0; xOffset < FULL_MANA.p.x - ZERO_MANA.p.x; xOffset += offsetIterator) {
+		if (robot->getBlue({ ZERO_MANA.p.x + xOffset, ZERO_MANA.p.y }) < blueThreshold) {
+			mana = static_cast<double>(xOffset) / (FULL_MANA.p.x - ZERO_MANA.p.x);
+			return true;
+		}
+	}
+	mana = 1.0;
+	return true;
+}
+
+bool LevelingBot::castAbilities(const char* abilities) {
+	//center screen on champ
+	robot->fKeyDown(1);
+	//move mouse to generic attack location for most abilities
+	robot->setCursorPos(ABILITY_ATTACK_LOCATION);
+	robot->keyClick(abilities, getKeyClickDuration());
+	return static_cast<bool>(robot->fKeyUp(1));
 }
 
 int LevelingBot::getMouseClickDuration() {
