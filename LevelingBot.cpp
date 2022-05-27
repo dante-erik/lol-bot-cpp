@@ -91,7 +91,7 @@ bool LevelingBot::backToBase() {
 	POINT recallLocation = getSafeRecallLocation();
 	//move to safety
 	while (isChampAlive() && !isChampStandingOnPoint(recallLocation)) {
-		robot->rightClick(getSafeRecallLocation(), getMouseClickDuration());
+		robot->rightClick(recallLocation, getMouseClickDuration());
 
 		robot->updateScreenBuffer();
 		updateHealth();
@@ -130,6 +130,7 @@ bool LevelingBot::isChampAlive() {
 }
 
 bool LevelingBot::isChampStandingOnPoint(POINT p) {
+	//1748, 973
 	constexpr LONG xLeftOffset = -34, yLeftOffset = -24, xRightOffset = 35, yRightOffset = 12;
 	//set camera position on champion (F1 hotkey) so the offsets listed above are correct
 	robot->fKeyDown(1);
