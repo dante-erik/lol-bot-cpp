@@ -23,3 +23,5 @@ constexpr POINT SAFE_ATTACK_MID_TOWER_2{1813, 915};
 constexpr POINT SAFE_ATTACK_MID_TOWER_3{1830, 895};
 constexpr POINT SAFE_ATTACK_NEXUS_TOWERS{1843, 871};
 constexpr POINT ABILITY_ATTACK_LOCATION{1010, 366};
+//ally base will always be blue side in intro-bots
+constexpr POINT ALLY_BASE{ 1668, 1053 };

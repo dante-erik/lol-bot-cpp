@@ -20,4 +20,3 @@ constexpr Pixel W_USABLE{ {797, 973}, 198, 162, 99 };
 constexpr Pixel E_USABLE{ {} };
 constexpr Pixel R_USABLE{ {} };
 //POINTs
-constexpr POINT ALLY_BASE{ 1668, 1053 };
