@@ -1,9 +1,6 @@
 #include "LevelingBot.hpp"
 #include "LevelingBotPixelsAndPoints.hpp"
-#include "Pixel.hpp"
 #include <iostream>
-#include <chrono>
-#include <memory>
 
 using namespace std::chrono;
 
