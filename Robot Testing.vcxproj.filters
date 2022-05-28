@@ -13,36 +13,69 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\LevelingBot">
+      <UniqueIdentifier>{ad349bbb-1e80-430f-b34c-dccb1a3ca730}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Robot">
+      <UniqueIdentifier>{5d325145-d5e2-48ac-8251-d808b0da05ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\YuumiBot">
+      <UniqueIdentifier>{510b3c37-137a-425f-a467-0403057fcb7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\LevelingBot">
+      <UniqueIdentifier>{8a1e9ab8-dffd-40ee-be37-052f61c4bf5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Robot">
+      <UniqueIdentifier>{8c242cf3-71e2-475a-b594-7f6129f2a1e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\YuumiBot">
+      <UniqueIdentifier>{dd82fdaa-6218-4e90-b7f9-32a08c322bd0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DirectInputKeyboardScancodes.hpp">
+    <ClInclude Include="LeaguePixelsAndPoints.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="YuumiBot.hpp">
+      <Filter>Header Files\YuumiBot</Filter>
+    </ClInclude>
+    <ClInclude Include="YuumiBotPixelsAndPoints.hpp">
+      <Filter>Header Files\YuumiBot</Filter>
     </ClInclude>
     <ClInclude Include="Robot.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Robot</Filter>
     </ClInclude>
     <ClInclude Include="Pixel.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Robot</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectInputKeyboardScancodes.hpp">
+      <Filter>Header Files\Robot</Filter>
     </ClInclude>
     <ClInclude Include="LevelingBot.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\LevelingBot</Filter>
     </ClInclude>
     <ClInclude Include="LevelingBotPixelsAndPoints.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\LevelingBot</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Robot.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="RobotDriver.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="LevelingBot.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\LevelingBot</Filter>
     </ClCompile>
     <ClCompile Include="LevelingBotDriver.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\LevelingBot</Filter>
+    </ClCompile>
+    <ClCompile Include="Robot.cpp">
+      <Filter>Source Files\Robot</Filter>
+    </ClCompile>
+    <ClCompile Include="RobotDriver.cpp">
+      <Filter>Source Files\Robot</Filter>
+    </ClCompile>
+    <ClCompile Include="YuumiBot.cpp">
+      <Filter>Source Files\YuumiBot</Filter>
+    </ClCompile>
+    <ClCompile Include="YuumiBotDriver.cpp">
+      <Filter>Source Files\YuumiBot</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

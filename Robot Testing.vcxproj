@@ -20,16 +20,21 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DirectInputKeyboardScancodes.hpp" />
+    <ClInclude Include="LeaguePixelsAndPoints.hpp" />
     <ClInclude Include="LevelingBot.hpp" />
     <ClInclude Include="LevelingBotPixelsAndPoints.hpp" />
     <ClInclude Include="Pixel.hpp" />
     <ClInclude Include="Robot.hpp" />
+    <ClInclude Include="YuumiBot.hpp" />
+    <ClInclude Include="YuumiBotPixelsAndPoints.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LevelingBot.cpp" />
     <ClCompile Include="LevelingBotDriver.cpp" />
     <ClCompile Include="Robot.cpp" />
     <ClCompile Include="RobotDriver.cpp" />
+    <ClCompile Include="YuumiBot.cpp" />
+    <ClCompile Include="YuumiBotDriver.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
