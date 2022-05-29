@@ -18,7 +18,6 @@ private:
 	const int tolerance;
 	const int keyClickDuration, keyClickDurationRandomness;
 	const int mouseClickDuration, mouseClickDurationRandomness;
-	POINT allyBase;
 	//these time_points are used to keep track of game time, item and ability cd's, and other useful timers
 	std::chrono::steady_clock::time_point gameStart;
 	std::chrono::steady_clock::time_point qPing;
@@ -39,27 +38,20 @@ private:
 	//std::unique_ptr<YuumiClientBot> clientBot;
 
 	//ACTIONS:
-	void attachToAlly(int ally);
-	void attack();
-	void backToBase();
-	void buyItem(const char* itemName);
-	void buyItems();
-	void healAttachedAlly();
-	void levelUpAbilities();
-	void lockCamera();
+	bool attachToAlly(int ally);
+	bool attack();
+	bool backToBase();
+	bool buyItem(const char* itemName);
+	int32_t buyItems();
+	bool castAbilities(const char* abilities);
+	bool healAttachedAlly();
+	bool levelUpAbilities();
 	//handles all in-game actions
-	void playGame();
-	void unattachFromAlly();
-	void unlockCamera();
-	void useItem(const Pixel item, int ally);
-	void waitForFullHealth();
+	bool playGame();
+	bool useItems(const char* itemNumbers, int ally);
+	bool waitForFullHealth();
 
 	//PIXEL CHECKING:
-	bool didAllyAssist(int ally);
-	bool didAllyDie(int ally);
-	bool didAllyKill(int ally);
-	int getItemSlotIndexForItem(const Pixel item);
-	bool isAllyAlive(int ally);
 	//use white box on minimap
 	bool isChampInBase(int ally);
 	//if redside changes the offsets, will need a bool for which side you're on then
@@ -67,19 +59,19 @@ private:
 	bool isNewGame();
 	//specific to checking only if Yuumi is alive, not other champs
 	bool isYuumiAlive();
-	bool isYuumiAttached();
-	bool isYuumiInBase();
+	bool didAllyKill(int ally);
+	bool didAllyDie(int ally);
+	bool didAllyAssist(int ally);
 
 	//TIME:
 	//returns time since startTime
 	std::chrono::steady_clock::time_point getTimeSince(std::chrono::steady_clock::time_point startTime);
 
 	//UPDATE GLOBALS:
-	void updateAllyBase();
-	void updateAllyIcons();
-	void updateCurrentAlly();
-	void updateHealth();
-	void updateWeightedKDA();
+	bool updateHealth();
+	bool updateWeightedKDA();
+	bool updateAllyIcons();
+	bool updateCurrentAlly();
 
 	//RANDOMNESS:
 	int getKeyClickDuration();
