@@ -2,6 +2,7 @@
 #include "Pixel.hpp"
 
 //Pixels
+constexpr Pixel CLIENT_BORDER{ {320, 160}, 30, 40, 45 };
 constexpr Pixel IN_GAME_HUD{ {1641, 1030}, 129, 106, 72 };
 constexpr Pixel SHOP_BRIGHT{ {1141, 1070}, 177, 157, 85 };
 constexpr Pixel EMPTY_ITEM_SLOT_1{ {1130, 946}, 0, 0, 0 };
@@ -20,3 +21,6 @@ constexpr Pixel W_USABLE{ {797, 973}, 198, 162, 99 };
 constexpr Pixel E_USABLE{ {} };
 constexpr Pixel R_USABLE{ {} };
 //POINTs
+//only on 1920x1080 screens, but the rest of the bot only runs when
+//the screen is 1920x1080 so it'll be fine
+constexpr POINT CENTER_OF_SCREEN{ 960, 540 };

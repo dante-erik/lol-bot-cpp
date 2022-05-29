@@ -2,7 +2,6 @@
 #include "LeaguePixelsAndPoints.hpp"
 
 //Pixels
-constexpr Pixel CLIENT_BORDER{ {320, 160}, 30, 40, 45 };
 constexpr Pixel FOW_ALLY_MID_TOWER_1{ {1762, 958}, 52, 55, 40 };
 constexpr Pixel FOW_ALLY_MID_TOWER_2{ {1739, 980}, 52, 55, 40 };
 constexpr Pixel FOW_ALLY_MID_TOWER_3{ {1729, 991}, 52, 55, 40 };
