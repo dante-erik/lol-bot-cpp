@@ -31,10 +31,6 @@ private:
 	std::chrono::steady_clock::time_point dragonKill;
 	std::chrono::steady_clock::time_point riftHeraldKill;
 	std::chrono::steady_clock::time_point baronKill;
-	std::chrono::steady_clock::time_point mikaels;
-	std::chrono::steady_clock::time_point redemption;
-	std::chrono::steady_clock::time_point shurelyas;
-	std::chrono::steady_clock::time_point iceSupportItem;
 	std::unique_ptr<Robot> robot;
 	//std::unique_ptr<YuumiClientBot> clientBot;
 
@@ -48,6 +44,14 @@ private:
 	void levelUpAbilities();
 	void lockCamera();
 	//handles all in-game actions
+	void pingBaron();
+	void pingDragon();
+	void pingE();
+	void pingQ();
+	void pingR();
+	void pingRecall();
+	void pingRiftHerald();
+	void pingW();
 	void playGame();
 	void unattachFromAlly();
 	void unlockCamera();
