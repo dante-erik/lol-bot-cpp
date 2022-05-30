@@ -27,7 +27,6 @@ YuumiBot::YuumiBot()
 	wPing(steady_clock::now()),
 	ePing(steady_clock::now()),
 	rPing(steady_clock::now()),
-	buy(steady_clock::now()),
 	recall(steady_clock::now()),
 	dragonSpawn(steady_clock::now()),
 	dragonPing(steady_clock::now()),
@@ -58,6 +57,8 @@ void YuumiBot::runBot() {
 		}
 	}
 }
+
+//ACTIONS:
 
 //returns true if able to attach to ally
 void YuumiBot::attachToAlly(int ally) {
@@ -257,3 +258,50 @@ void YuumiBot::waitForFullHealth() {
 		updateHealth();
 	}
 }
+
+//PIXEL CHECKING:
+
+bool YuumiBot::didAllyAssist(int ally) {
+	constexpr int pixelsPerAllyIcon = 2;
+	constexpr int xOffset = -5, yOffset = -5;
+	//these pixels are in the assist feed's positions
+	Pixel allyIconPixels[pixelsPerAllyIcon]{};
+	for (int pixelIndex = 0; pixelIndex < pixelsPerAllyIcon; pixelIndex++) {
+		//x and y offset should make the x and y of the pixel placed in the assist feed
+		allyIconPixels[pixelIndex] = Pixel{
+			{allyIcon[ally][pixelIndex].p.x + xOffset, allyIcon[ally][pixelIndex].p.x + yOffset},
+			allyIcon[ally][pixelIndex].r,
+			allyIcon[ally][pixelIndex].g,
+			allyIcon[ally][pixelIndex].b };
+		if (!robot->isPixelSimilar(allyIconPixels[pixelIndex], tolerance)) {
+			return false;
+		}
+	}
+	return true;
+}
+//bool didAllyAssist(int ally);
+//bool didAllyDie(int ally);
+//bool didAllyKill(int ally);
+//bool didBaronDie();
+//bool didDragonDie();
+//bool didRiftHeraldDie();
+//int getItemSlotIndexForItem(const Pixel item);
+//bool isAllyAlive(int ally);
+//bool isBaronAlive();
+//bool isCameraLocked();
+////use white box on minimap
+//bool isChampInBase(int ally);
+////if redside changes the offsets, will need a bool for which side you're on then
+//bool isChampStandingOnPoint(POINT p, int ally);
+//bool isDragonAlive();
+//bool isEUsable();
+//bool isNewGame();
+//bool isQUsable();
+//bool isRiftHeraldAlive();
+//bool isRUsable();
+//bool isWUsable();
+////specific to checking only if Yuumi is alive, not other champs
+//bool isYuumiAlive();
+//bool isYuumiAttached();
+//bool isYuumiInBase();
+//bool isYuumiLevelUp();
