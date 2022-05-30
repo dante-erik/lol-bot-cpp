@@ -25,12 +25,17 @@ private:
 	std::chrono::steady_clock::time_point wPing;
 	std::chrono::steady_clock::time_point ePing;
 	std::chrono::steady_clock::time_point rPing;
-	std::chrono::steady_clock::time_point buy;
 	std::chrono::steady_clock::time_point recall;
-	std::chrono::steady_clock::time_point die;
-	std::chrono::steady_clock::time_point dragonKill;
-	std::chrono::steady_clock::time_point riftHeraldKill;
-	std::chrono::steady_clock::time_point baronKill;
+	std::chrono::steady_clock::time_point recallPing;
+	std::chrono::steady_clock::time_point dragonSpawn;
+	std::chrono::steady_clock::time_point dragonPing;
+	std::chrono::steady_clock::time_point dragonTimerPing;
+	std::chrono::steady_clock::time_point riftHeraldSpawn;
+	std::chrono::steady_clock::time_point riftHeraldPing;
+	std::chrono::steady_clock::time_point riftHeraldTimerPing;
+	std::chrono::steady_clock::time_point baronSpawn;
+	std::chrono::steady_clock::time_point baronPing;
+	std::chrono::steady_clock::time_point baronTimerPing;
 	std::unique_ptr<Robot> robot;
 	//std::unique_ptr<YuumiClientBot> clientBot;
 
@@ -43,14 +48,18 @@ private:
 	void healAttachedAlly();
 	void levelUpAbilities();
 	void lockCamera();
+	void ping(const POINT location);
 	//handles all in-game actions
 	void pingBaron();
+	void pingBaronTimer(const long long timeUntilSpawn);
 	void pingDragon();
+	void pingDragonTimer(const long long timeUntilSpawn);
 	void pingE();
 	void pingQ();
 	void pingR();
 	void pingRecall();
 	void pingRiftHerald();
+	void pingRiftHeraldTimer(const long long timeUntilSpawn);
 	void pingW();
 	void playGame();
 	void unattachFromAlly();
@@ -59,30 +68,49 @@ private:
 	void waitForFullHealth();
 
 	//PIXEL CHECKING:
+	//note: there's so many of these methods because the names
+	//are self-documenting and helpful when thinking about logic in other methods
 	bool didAllyAssist(int ally);
 	bool didAllyDie(int ally);
 	bool didAllyKill(int ally);
+	bool didBaronDie();
+	bool didDragonDie();
+	bool didRiftHeraldDie();
 	int getItemSlotIndexForItem(const Pixel item);
 	bool isAllyAlive(int ally);
+	bool isBaronAlive();
+	bool isCameraLocked();
 	//use white box on minimap
 	bool isChampInBase(int ally);
 	//if redside changes the offsets, will need a bool for which side you're on then
 	bool isChampStandingOnPoint(POINT p, int ally);
+	bool isDragonAlive();
+	bool isEUsable();
 	bool isNewGame();
+	bool isQUsable();
+	bool isRiftHeraldAlive();
+	bool isRUsable();
+	bool isWUsable();
 	//specific to checking only if Yuumi is alive, not other champs
 	bool isYuumiAlive();
 	bool isYuumiAttached();
 	bool isYuumiInBase();
+	bool isYuumiLevelUp();
 
 	//TIME:
 	//returns time since startTime
+	long long getSeconds(std::chrono::steady_clock::time_point time);
 	std::chrono::steady_clock::time_point getTimeSince(std::chrono::steady_clock::time_point startTime);
+	std::chrono::steady_clock::time_point getTimeUntil(std::chrono::steady_clock::time_point time);
 
 	//UPDATE GLOBALS:
 	void updateAllyBase();
 	void updateAllyIcons();
+	void updateBaronSpawn();
 	void updateCurrentAlly();
+	void updateDragonSpawn();
 	void updateHealth();
+	void updateRiftHeraldSpawn();
 	void updateWeightedKDA();
 
 	//RANDOMNESS:

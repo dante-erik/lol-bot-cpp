@@ -29,14 +29,15 @@ YuumiBot::YuumiBot()
 	rPing(steady_clock::now()),
 	buy(steady_clock::now()),
 	recall(steady_clock::now()),
-	die(steady_clock::now()),
-	dragonKill(steady_clock::now()),
-	riftHeraldKill(steady_clock::now()),
-	baronKill(steady_clock::now()),
-	mikaels(steady_clock::now()),
-	redemption(steady_clock::now()),
-	shurelyas(steady_clock::now()),
-	iceSupportItem(steady_clock::now()),
+	dragonSpawn(steady_clock::now()),
+	dragonPing(steady_clock::now()),
+	dragonTimerPing(steady_clock::now()),
+	riftHeraldSpawn(steady_clock::now()),
+	riftHeraldPing(steady_clock::now()),
+	riftHeraldTimerPing(steady_clock::now()),
+	baronSpawn(steady_clock::now()),
+	baronPing(steady_clock::now()),
+	baronTimerPing(steady_clock::now()),
 	robot(std::make_unique<Robot>())
 { }
 
@@ -102,20 +103,121 @@ void YuumiBot::buyItems() {
 }
 
 void YuumiBot::healAttachedAlly() {
-	if (isYuumiAttached() && robot->isPixelSimilar(E_USABLE, tolerance)) {
+	if (isYuumiAttached() && isEUsable()) {
 		robot->keyClick('e', getKeyClickDuration());
 	}
 }
 
 void YuumiBot::levelUpAbilities() {
-	if (robot->isPixelSimilar(CAN_LEVEL_UP_ABILITY, tolerance)) {
+	if (isYuumiLevelUp()) {
 		robot->ctrlPlusKeyClick("reqw", getKeyClickDuration());
 	}
 }
 
 void YuumiBot::lockCamera() {
-	if (!robot->isPixelSimilar(CAMERA_LOCKED, tolerance)) {
+	if (!isCameraLocked()) {
 		robot->keyClick('y', getKeyClickDuration());
+	}
+}
+
+void YuumiBot::ping(const POINT location) {
+	robot->keyClick('g', getKeyClickDuration());
+	robot->leftClick(location, getMouseClickDuration());
+}
+
+void YuumiBot::pingBaron() {
+	if (isBaronAlive()) {
+		ping(BARON);
+		baronPing = steady_clock::now();
+	}
+}
+
+void YuumiBot::pingBaronTimer(const long long timeUntilSpawn) {
+	//ping if the actual (in-game) time until spawn is less than the parameterized (requested) time until spawn
+	//and if the last time it was pinged was before the parameterized (requested) time until spawn
+	//this prevents the function from being called more than once before the enemy spawns
+	if (duration_cast<seconds>(getTimeUntil(baronSpawn).time_since_epoch().count()) < timeUntilSpawn &&
+		duration_cast<seconds>(getTimeSince(baronTimerPing).time_since_epoch().count()) > timeUntilSpawn) {
+		robot->keyClick('o', getKeyClickDuration());
+		robot->leftClick(BARON_TIMER, getMouseClickDuration());
+		robot->keyClick('o', getKeyClickDuration());
+		baronTimerPing = steady_clock::now();
+	}
+}
+
+void YuumiBot::pingDragon() {
+	if (isDragonAlive()) {
+		ping(DRAGON);
+		dragonPing = steady_clock::now();
+	}
+}
+
+void YuumiBot::pingDragonTimer(const long long timeUntilSpawn) {
+	//ping if the actual (in-game) time until spawn is less than the parameterized (requested) time until spawn
+	//and if the last time it was pinged was before the parameterized (requested) time until spawn
+	//this prevents the function from being called more than once before the enemy spawns
+	if (duration_cast<seconds>(getTimeUntil(dragonSpawn).time_since_epoch().count()) < timeUntilSpawn &&
+		duration_cast<seconds>(getTimeSince(dragonTimerPing).time_since_epoch().count()) > timeUntilSpawn) {
+		robot->keyClick('o', getKeyClickDuration());
+		robot->leftClick(DRAGON_TIMER, getMouseClickDuration());
+		robot->keyClick('o', getKeyClickDuration());
+		dragonTimerPing = steady_clock::now();
+	}
+}
+
+void YuumiBot::pingE() {
+	//if E is not usable, pinging it will show the reason it is not usable
+	//might be not usable due to cooldown, mana, or other reason
+	if (!isEUsable()) {
+		ping(ABILITY_E);
+		ePing = steady_clock::now();
+	}
+}
+
+void YuumiBot::pingQ() {
+	if (!isQUsable()) {
+		ping(ABILITY_Q);
+		qPing = steady_clock::now();
+	}
+}
+
+void YuumiBot::pingR() {
+	if (!isRUsable()) {
+		ping(ABILITY_R);
+		rPing = steady_clock::now();
+	}
+}
+
+void YuumiBot::pingRecall() {
+	constexpr long long timeThresholdForRecallPing = 600;
+	if (getSeconds(getTimeSince(recall)) > timeThresholdForRecallPing &&
+		getSeconds(getTimeSince(recallPing)) < timeThresholdForRecallPing) {
+		ping(RECALL_BUTTON);
+		recallPing = steady_clock::now();
+	}
+}
+
+void YuumiBot::pingRiftHerald() {
+	if (isRiftHeraldAlive()) {
+		ping(RIFT_HERALD);
+		riftHeraldPing = steady_clock::now();
+	}
+}
+
+void YuumiBot::pingRiftHeraldTimer(const long long timeUntilSpawn) {
+	if (duration_cast<seconds>(getTimeUntil(riftHeraldSpawn).time_since_epoch().count()) < timeUntilSpawn &&
+		duration_cast<seconds>(getTimeSince(riftHeraldTimerPing).time_since_epoch().count()) > timeUntilSpawn) {
+		robot->keyClick('o', getKeyClickDuration());
+		robot->leftClick(BARON_TIMER, getMouseClickDuration());
+		robot->keyClick('o', getKeyClickDuration());
+		riftHeraldTimerPing = steady_clock::now();
+	}
+}
+
+void YuumiBot::pingW() {
+	if (isWUsable()) {
+		ping(ABILITY_W);
+		wPing = steady_clock::now();
 	}
 }
 
@@ -134,7 +236,7 @@ void YuumiBot::unattachFromAlly() {
 }
 
 void YuumiBot::unlockCamera() {
-	if (robot->isPixelSimilar(CAMERA_LOCKED, tolerance)) {
+	if (isCameraLocked()) {
 		robot->keyClick('y', getKeyClickDuration());
 	}
 }
@@ -150,7 +252,8 @@ void YuumiBot::useItem(const Pixel item, int ally) {
 
 void YuumiBot::waitForFullHealth() {
 	//wait for the right-most health pixel to turn green
-	while (robot->getGreen(FULL_HEALTH.p) < 80) {
+	while (health[YUUMI] > 0.95f && isYuumiInBase()) {
 		robot->updateScreenBuffer();
+		updateHealth();
 	}
 }
