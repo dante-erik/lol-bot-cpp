@@ -5,11 +5,11 @@
 using namespace std::chrono;
 
 YuumiBot::YuumiBot()
-	: allyIcon{ {Pixel{{0,0},0,0,0}, Pixel{{0,0},0,0,0}},
-				{ Pixel{{0,0},0,0,0}, Pixel{{0,0},0,0,0} },
-				{ Pixel{{0,0},0,0,0}, Pixel{{0,0},0,0,0} },
-				{ Pixel{{0,0},0,0,0}, Pixel{{0,0},0,0,0} },
-				{ Pixel{{0,0},0,0,0}, Pixel{{0,0},0,0,0} }, },
+	: allyIcon{ Pixel{{0,0},0,0,0},
+				Pixel{{0,0},0,0,0},
+				Pixel{{0,0},0,0,0},
+				Pixel{{0,0},0,0,0},
+				Pixel{{0,0},0,0,0} },
 	health{ 1.0, 1.0, 1.0, 1.0, 1.0 },
 	weightedKDA{ 0.0, 0.0, 0.0, 0.0, 0.0 },
 	kills{ 0, 0, 0, 0, 0 },
@@ -261,26 +261,71 @@ void YuumiBot::waitForFullHealth() {
 
 //PIXEL CHECKING:
 
+//this function will return true if ally is shown in the assist section
+//of the kill feed. this includes assisting enemies on epic monster kills
 bool YuumiBot::didAllyAssist(int ally) {
-	constexpr int pixelsPerAllyIcon = 2;
-	constexpr int xOffset = -5, yOffset = -5;
+	//im 90% sure there can only be 4 assists in the killfeed, maybe im wrong tho
+	constexpr int MAX_NUMBER_OF_ASSISTS_IN_KILL_FEED = 4;
+	//minimap offsets move the pixel x,y to the 1st assist position on kill feed
+	//killfeed offset move the pixel left from the 1st ... 4th posistions on kill feed
+
+	//SET THE REAL VALUES MAY 30 2022
+	constexpr int X_OFFSET_MINIMAP = -5, Y_OFFSET_MINIMAP = -5, X_OFFSET_KILL_FEED = -10;
 	//these pixels are in the assist feed's positions
-	Pixel allyIconPixels[pixelsPerAllyIcon]{};
-	for (int pixelIndex = 0; pixelIndex < pixelsPerAllyIcon; pixelIndex++) {
+	Pixel allyIconPixelInKillFeed;
+	for (int offsetMultiplier = 0; offsetMultiplier < MAX_NUMBER_OF_ASSISTS_IN_KILL_FEED; offsetMultiplier++) {
 		//x and y offset should make the x and y of the pixel placed in the assist feed
-		allyIconPixels[pixelIndex] = Pixel{
-			{allyIcon[ally][pixelIndex].p.x + xOffset, allyIcon[ally][pixelIndex].p.x + yOffset},
-			allyIcon[ally][pixelIndex].r,
-			allyIcon[ally][pixelIndex].g,
-			allyIcon[ally][pixelIndex].b };
-		if (!robot->isPixelSimilar(allyIconPixels[pixelIndex], tolerance)) {
-			return false;
+		//the assist feed's icon is smaller, you possibly need to scale the x,y and colors
+		//after scaling, then the use xyoffset translation, and then loop thru that
+		allyIconPixelInKillFeed = Pixel{
+			POINT{allyIcon[ally].p.x + X_OFFSET_MINIMAP + X_OFFSET_KILL_FEED * offsetMultiplier,
+			allyIcon[ally].p.x + Y_OFFSET_MINIMAP},
+			allyIcon[ally].r,
+			allyIcon[ally].g,
+			allyIcon[ally].b };
+		//isAnyEnemyDead() protects against random assists being added when an assist
+		//would not have been possible due to no enemy deaths
+		if (robot->isPixelSimilar(allyIconPixelInKillFeed, tolerance) && isAnyEnemyDead()) {
+			return true;
 		}
 	}
-	return true;
+	return false;
 }
-//bool didAllyAssist(int ally);
-//bool didAllyDie(int ally);
+
+bool YuumiBot::didAllyDie(int ally) {
+	if (!isAllyAlive(ally)) {
+		switch (ally) {
+		case TOP:
+			if (getSeconds(getTimeSince(topDie)) > 55) {
+				topDie = steady_clock::now();
+				return true;
+			}
+			break;
+		case JG:
+			if (getSeconds(getTimeSince(jungleDie)) > 55) {
+				jungleDie = steady_clock::now();
+				return true;
+			}
+			break;
+		case MID:
+			if (getSeconds(getTimeSince(midDie)) > 55) {
+				midDie = steady_clock::now();
+				return true;
+			}
+			break; 
+		case ADC:
+			if (getSeconds(getTimeSince(adcDie)) > 55) {
+				adcDie = steady_clock::now();
+				return true;
+			}
+			break;
+		default:
+			break;
+		}
+	}
+	return false;
+}
+
 //bool didAllyKill(int ally);
 //bool didBaronDie();
 //bool didDragonDie();

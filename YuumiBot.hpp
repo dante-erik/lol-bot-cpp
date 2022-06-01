@@ -10,7 +10,7 @@ enum ally{
 class YuumiBot {
 private:
 	//each ally's portrait over minimap, 2 pixels per ally
-	Pixel allyIcon[5][2];
+	Pixel allyIcon[5];
 	//all allies HP, only YUUMI mana
 	float health[5], weightedKDA[5];
 	int kills[5], deaths[5], assists[5], currentAlly;
@@ -36,6 +36,10 @@ private:
 	std::chrono::steady_clock::time_point baronSpawn;
 	std::chrono::steady_clock::time_point baronPing;
 	std::chrono::steady_clock::time_point baronTimerPing;
+	std::chrono::steady_clock::time_point topDie;
+	std::chrono::steady_clock::time_point jungleDie;
+	std::chrono::steady_clock::time_point midDie;
+	std::chrono::steady_clock::time_point adcDie;
 	std::unique_ptr<Robot> robot;
 	//std::unique_ptr<YuumiClientBot> clientBot;
 
@@ -78,6 +82,7 @@ private:
 	bool didRiftHeraldDie();
 	int getItemSlotIndexForItem(const Pixel item);
 	bool isAllyAlive(int ally);
+	bool isAnyEnemyDead();
 	bool isBaronAlive();
 	bool isCameraLocked();
 	//use white box on minimap
