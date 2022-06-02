@@ -286,7 +286,35 @@ bool YuumiBot::didAllyAssist(int ally) {
 		//isAnyEnemyDead() protects against random assists being added when an assist
 		//would not have been possible due to no enemy deaths
 		if (robot->isPixelSimilar(allyIconPixelInKillFeed, tolerance) && isAnyEnemyDead()) {
-			return true;
+			constexpr int DURATION_OF_KILL_FEED = 6;
+			switch (ally) {
+			case TOP:
+				if (getSeconds(getTimeSince(topAssist)) > DURATION_OF_KILL_FEED) {
+					topAssist = steady_clock::now();
+					return true;
+				}
+				break;
+			case JG:
+				if (getSeconds(getTimeSince(jungleAssist)) > DURATION_OF_KILL_FEED) {
+					jungleAssist = steady_clock::now();
+					return true;
+				}
+				break;
+			case MID:
+				if (getSeconds(getTimeSince(midAssist)) > DURATION_OF_KILL_FEED) {
+					midAssist = steady_clock::now();
+					return true;
+				}
+				break;
+			case ADC:
+				if (getSeconds(getTimeSince(adcAssist)) > DURATION_OF_KILL_FEED) {
+					adcAssist = steady_clock::now();
+					return true;
+				}
+				break;
+			default:
+				break;
+			}
 		}
 	}
 	return false;
@@ -294,27 +322,31 @@ bool YuumiBot::didAllyAssist(int ally) {
 
 bool YuumiBot::didAllyDie(int ally) {
 	if (!isAllyAlive(ally)) {
+		//the real max death timer as of patch 12.10 is 78.75 seconds,
+		//but 78.75 is practically never reached and setting MAX_DEATH_TIMER
+		//higher risks an ally dying twice within the timer duration
+		constexpr int MAX_DEATH_TIMER = 55;
 		switch (ally) {
 		case TOP:
-			if (getSeconds(getTimeSince(topDie)) > 55) {
+			if (getSeconds(getTimeSince(topDie)) > MAX_DEATH_TIMER) {
 				topDie = steady_clock::now();
 				return true;
 			}
 			break;
 		case JG:
-			if (getSeconds(getTimeSince(jungleDie)) > 55) {
+			if (getSeconds(getTimeSince(jungleDie)) > MAX_DEATH_TIMER) {
 				jungleDie = steady_clock::now();
 				return true;
 			}
 			break;
 		case MID:
-			if (getSeconds(getTimeSince(midDie)) > 55) {
+			if (getSeconds(getTimeSince(midDie)) > MAX_DEATH_TIMER) {
 				midDie = steady_clock::now();
 				return true;
 			}
 			break; 
 		case ADC:
-			if (getSeconds(getTimeSince(adcDie)) > 55) {
+			if (getSeconds(getTimeSince(adcDie)) > MAX_DEATH_TIMER) {
 				adcDie = steady_clock::now();
 				return true;
 			}
@@ -326,7 +358,55 @@ bool YuumiBot::didAllyDie(int ally) {
 	return false;
 }
 
-//bool didAllyKill(int ally);
+bool YuumiBot::didAllyKill(int ally) {
+	//these translate the minimap ally icon pixel to the kill feed kill pixel location
+	//ACTUALLY SET REAL VALUES JUNE 2
+	constexpr int X_OFFSET_MINIMAP = -5, Y_OFFSET_MINIMAP = -6;
+
+	//allyIcon pixel translated x,y
+	const Pixel allyIconPixelInKillFeed = Pixel{
+			POINT{allyIcon[ally].p.x + X_OFFSET_MINIMAP,
+			allyIcon[ally].p.x + Y_OFFSET_MINIMAP},
+			allyIcon[ally].r,
+			allyIcon[ally].g,
+			allyIcon[ally].b };
+
+	//isAnyEnemyDead() protects against random assists being added when an assist
+		//would not have been possible due to no enemy deaths
+	if (robot->isPixelSimilar(allyIconPixelInKillFeed, tolerance) && isAnyEnemyDead()) {
+		constexpr int DURATION_OF_KILL_FEED = 6;
+		switch (ally) {
+		case TOP:
+			if (getSeconds(getTimeSince(topKill)) > DURATION_OF_KILL_FEED) {
+				topKill = steady_clock::now();
+				return true;
+			}
+			break;
+		case JG:
+			if (getSeconds(getTimeSince(jungleKill)) > DURATION_OF_KILL_FEED) {
+				jungleKill = steady_clock::now();
+				return true;
+			}
+			break;
+		case MID:
+			if (getSeconds(getTimeSince(midKill)) > DURATION_OF_KILL_FEED) {
+				midKill = steady_clock::now();
+				return true;
+			}
+			break;
+		case ADC:
+			if (getSeconds(getTimeSince(adcKill)) > DURATION_OF_KILL_FEED) {
+				adcKill = steady_clock::now();
+				return true;
+			}
+			break;
+		default:
+			break;
+		}
+	}
+	return false;
+}
+
 //bool didBaronDie();
 //bool didDragonDie();
 //bool didRiftHeraldDie();

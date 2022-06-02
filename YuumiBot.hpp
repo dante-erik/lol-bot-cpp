@@ -36,10 +36,18 @@ private:
 	std::chrono::steady_clock::time_point baronSpawn;
 	std::chrono::steady_clock::time_point baronPing;
 	std::chrono::steady_clock::time_point baronTimerPing;
+	std::chrono::steady_clock::time_point topAssist;
+	std::chrono::steady_clock::time_point jungleAssist;
+	std::chrono::steady_clock::time_point midAssist;
+	std::chrono::steady_clock::time_point adcAssist;
 	std::chrono::steady_clock::time_point topDie;
 	std::chrono::steady_clock::time_point jungleDie;
 	std::chrono::steady_clock::time_point midDie;
 	std::chrono::steady_clock::time_point adcDie;
+	std::chrono::steady_clock::time_point topKill;
+	std::chrono::steady_clock::time_point jungleKill;
+	std::chrono::steady_clock::time_point midKill;
+	std::chrono::steady_clock::time_point adcKill;
 	std::unique_ptr<Robot> robot;
 	//std::unique_ptr<YuumiClientBot> clientBot;
 
