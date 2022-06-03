@@ -555,3 +555,133 @@ bool YuumiBot::isYuumiInBase() {
 bool YuumiBot::isYuumiLevelUp() {
 	return robot->isPixelSimilar(CAN_LEVEL_UP_ABILITY, tolerance);
 }
+
+//TIME:
+
+long long YuumiBot::getSeconds(steady_clock::time_point time) {
+	return duration_cast<seconds>(time.time_since_epoch().count());
+}
+
+steady_clock::time_point YuumiBot::getTimeSince(steady_clock::time_point startTime) {
+	return static_cast<steady_clock::time_point>(steady_clock::now() - startTime);
+}
+
+steady_clock::time_point YuumiBot::getTimeUntil(steady_clock::time_point time) {
+	return static_cast<steady_clock::time_point>(time - steady_clock::now());
+}
+
+//UPDATE GLOBAL VARIABLES:
+
+void YuumiBot::updateAllyBase() {
+	if (isTeamOnBlueSide()) {
+		allyBase = BLUE_SIDE_BASE;
+	}
+	else {
+		allyBase = RED_SIDE_BASE;
+	}
+}
+
+void YuumiBot::updateAllyIcons() {
+	//need to add special casing for Kayn, maybe Kayle,
+	//and any other champs whose icons change mid-game
+	//SET REAL VALUE JUNE 3
+	constexpr int TEAM_SIZE = 5, ICON_OFFSET_X = 0;
+	constexpr POINT LEFT_ALLY_ICON{ 0, 0 };
+	POINT allyIconPoint;
+	for (int ally = 1; ally < TEAM_SIZE; ally++) {
+		allyIconPoint = { LEFT_ALLY_ICON.x + ICON_OFFSET_X * (ally - 1), LEFT_ALLY_ICON.y };
+
+		allyIcon[ally] = Pixel{
+			allyIconPoint,
+			robot->getRed(allyIconPoint),
+			robot->getGreen(allyIconPoint),
+			robot->getBlue(allyIconPoint)
+		};
+	}
+}
+
+void YuumiBot::updateBaronSpawn() {
+	constexpr long long FIRST_BARON_SPAWN = 20 * 60, BARON_RESPAWN_DURATION = 5 * 60;
+	if (getSeconds(getTimeSince(gameStart)) < 20 * 60) {
+		//baronSpawn = gameStart + FIRST_BARON_SPAWN
+	}
+	else if (didBaronDie()) {
+		//baronSpawn = now() + BARON_RESPAWN_DURATION
+	}
+}
+
+void YuumiBot::updateCurrentAlly() {
+	constexpr int MAX_TEAM_SIZE = 5;
+	//if the game time is past 10 mins, pick highest kda ally
+	//if the game time is before 10 mins, pick ADC
+	if (getSeconds(getTimeSince(gameStart)) > 10 * 60) {
+		float highestKDA = -1.0f;
+		int highestKDAIndex = ADC;
+		for (int ally = 1; ally < MAX_TEAM_SIZE; ally++) {
+			if (weightedKDA[ally] > highestKDA) {
+				highestKDA = weightedKDA[ally];
+				currentAlly = ally;
+			}
+		}
+	}
+	else {
+		currentAlly = ADC;
+	}
+}
+
+void YuumiBot::updateDragonSpawn() {
+	constexpr long long FIRST_DRAGON_SPAWN = 10 * 60, DRAGON_RESPAWN_DURATION = 5 * 60;
+	if (getSeconds(getTimeSince(gameStart)) < FIRST_DRAGON_SPAWN) {
+		//dragonSpawn = gameStart + FIRST_DRAGON_SPAWN
+	}
+	else if(didDragonDie()) {
+		//dragonSpawn = now() + DRAGON_RESPAWN_DURATION
+	}
+}
+
+void YuumiBot::updateHealth() {
+	//setting Yuumi's health
+	//minimum green value in the health bar for it be considered health vs empty
+	constexpr BYTE greenThreshold = 50;
+	if (robot->getGreen(FULL_HEALTH.p) > 50) {
+		health[YUUMI] = 1.0;
+	}
+	else {
+		//higher value, faster performance, lower accuracy on returned health value
+		//there's 412 health pixels in Yuumi's HUD health bar
+		constexpr int OFFSET_ITERATOR = 4;
+		for (int xOffset = 0; xOffset < FULL_HEALTH.p.x - ZERO_HEALTH.p.x; xOffset += OFFSET_ITERATOR) {
+			if (robot->getGreen({ ZERO_HEALTH.p.x + xOffset, ZERO_HEALTH.p.y }) < greenThreshold) {
+				health[YUUMI] = static_cast<double>(xOffset) / (FULL_HEALTH.p.x - ZERO_HEALTH.p.x);
+				//end loop
+				xOffset = FULL_HEALTH.p.x - ZERO_HEALTH.p.x;
+			}
+		}
+	}
+	
+	//setting allies' health
+	constexpr int MAX_TEAM_SIZE = 5;
+	constexpr int ALLY_HEALTH_BAR_OFFSET = 0, ALLY_HEALTH_PIXEL_OFFSET_ITERATOR = 1;
+	POINT allyFullHealth, allyZeroHealth;
+	for (int ally = 1; ally < MAX_TEAM_SIZE; ally++) {
+		allyFullHealth = { LEFT_ALLY_FULL_HEALTH.p.x + ALLY_HEALTH_BAR_OFFSET * (ally - 1),
+						   LEFT_ALLY_FULL_HEALTH.p.y };
+		allyZeroHealth = { LEFT_ALLY_ZERO_HEALTH.p.x + ALLY_HEALTH_BAR_OFFSET * (ally - 1),
+						   LEFT_ALLY_ZERO_HEALTH.p.y };
+
+		if (robot->getGreen(allyFullHealth) > 50) {
+			health[ally] = 1.0;
+		}
+		else {
+			//higher value, faster performance, lower accuracy on returned health value
+			//there's 412 health pixels in Yuumi's HUD health bar
+			for (int xOffset = 0; xOffset < allyFullHealth.x - allyZeroHealth.x; xOffset += ALLY_HEALTH_PIXEL_OFFSET_ITERATOR) {
+				if (robot->getGreen({ allyZeroHealth.x + xOffset, allyZeroHealth.y }) < greenThreshold) {
+					health[YUUMI] = static_cast<double>(xOffset) / (FULL_HEALTH.p.x - ZERO_HEALTH.p.x);
+					//end loop
+					xOffset = allyFullHealth.x - allyZeroHealth.x;
+				}
+			}
+		}
+	}
+}
