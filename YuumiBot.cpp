@@ -246,7 +246,7 @@ void YuumiBot::useItem(const Pixel item, int ally) {
 	int itemIndex = getItemSlotIndexForItem(item);
 	//if item was found
 	if (itemIndex > 0) {
-		robot->setCursorPos(allyIcon[ally][0].p);
+		robot->setCursorPos(allyIcon[ally].p);
 		robot->keyClick(std::to_string(itemIndex).c_str(), getKeyClickDuration());
 	}
 }
@@ -403,6 +403,23 @@ bool YuumiBot::didAllyKill(int ally) {
 		default:
 			break;
 		}
+	}
+	return false;
+}
+
+bool YuumiBot::didBaronDie() {
+	if (robot->isPixelSimilar(BARON_IN_KILL_FEED, tolerance) && !isBaronAlive()) {
+		//set baronSpawn to be 5 minutes into the future from now
+		//baronSpawn = 
+		return true;
+	}
+	return false;
+}
+
+bool YuumiBot::didDragonDie() {
+	if (robot->isPixelSimilar(DRAGON_IN_KILL_FEED, tolerance) && !isDragonAlive()) {
+		//same as baron
+		return true;
 	}
 	return false;
 }
