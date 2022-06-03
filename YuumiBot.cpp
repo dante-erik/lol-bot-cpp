@@ -419,31 +419,139 @@ bool YuumiBot::didBaronDie() {
 bool YuumiBot::didDragonDie() {
 	if (robot->isPixelSimilar(DRAGON_IN_KILL_FEED, tolerance) && !isDragonAlive()) {
 		//same as baron
+		//dragonSpawn = 
 		return true;
 	}
 	return false;
 }
 
-//bool didBaronDie();
-//bool didDragonDie();
-//bool didRiftHeraldDie();
-//int getItemSlotIndexForItem(const Pixel item);
-//bool isAllyAlive(int ally);
-//bool isBaronAlive();
-//bool isCameraLocked();
-////use white box on minimap
-//bool isChampInBase(int ally);
-////if redside changes the offsets, will need a bool for which side you're on then
-//bool isChampStandingOnPoint(POINT p, int ally);
-//bool isDragonAlive();
-//bool isEUsable();
-//bool isNewGame();
-//bool isQUsable();
-//bool isRiftHeraldAlive();
-//bool isRUsable();
-//bool isWUsable();
-////specific to checking only if Yuumi is alive, not other champs
-//bool isYuumiAlive();
-//bool isYuumiAttached();
-//bool isYuumiInBase();
-//bool isYuumiLevelUp();
+bool YuumiBot::didRiftHeraldDie() {
+	if (robot->isPixelSimilar(RIFT_HERALD_IN_KILL_FEED, tolerance) && !isRiftHeraldAlive()) {
+		//riftHeraldSpawn = 
+		return true;
+	}
+	return false;
+}
+
+int YuumiBot::getItemSlotIndexForItem(const Pixel item) {
+	//set real values june 3
+	constexpr int ITEM_SLOT_OFFSET_X = 5, ITEM_SLOT_OFFSET_Y = 10;
+	constexpr int MAX_ITEM_ROWS = 2, MAX_ITEM_COLS = 3;
+
+	Pixel offsetItem;
+
+	for (int itemRow = 0; itemRow < MAX_ITEM_ROWS; itemRow++) {
+		for (int itemCol = 0; itemCol < MAX_ITEM_COLS; itemCol++) {
+			offsetItem = Pixel{
+				POINT{item.p.x + ITEM_SLOT_OFFSET_X * itemCol, item.p.y + ITEM_SLOT_OFFSET_Y * itemRow},
+				item.r,
+				item.g,
+				item.b
+			};
+				if (robot->isPixelSimilar(offsetItem, tolerance)) {
+					//returns item index 1 thru 6 inclusive
+					return itemCol + itemRow * MAX_ITEM_COLS + 1;
+			}
+		}
+	}
+	//item not found
+	return 0;
+}
+
+bool YuumiBot::isAllyAlive(int ally) {
+	return robot->isPixelSimilar(allyIcon[ally], tolerance);
+}
+
+bool YuumiBot::isAnyEnemyDead() {
+	return robot->isPixelSimilar(DEAD_ENEMY_ABOVE_MINIMAP_BORDER, tolerance);
+}
+
+bool YuumiBot::isBaronAlive() {
+	return robot->isPixelSimilar(BARON_ON_MINIMAP, tolerance) &&
+		   getSeconds(getTimeUntil(baronSpawn)) < 0;
+}
+
+bool YuumiBot::isCameraLocked() {
+	return robot->isPixelSimilar(CAMERA_LOCKED, tolerance);
+}
+
+bool YuumiBot::isChampStandingOnPoint(POINT p, int ally) {
+	LONG xLeftOffset, yLeftOffset, xRightOffset, yRightOffset;
+	if (isTeamOnBlueSide()) {
+		//camera offsets for blue side
+		xLeftOffset = -34, yLeftOffset = -24, xRightOffset = 35, yRightOffset = 12;
+	}
+	else {
+		//camera offsets for red side
+		//SET REAL VALUES JUNE 3
+		xLeftOffset = 0, yLeftOffset = 0, xRightOffset = 0, yRightOffset = 0;
+	}
+
+	//set camera position on champion (F1 hotkey) so the offsets listed above are correct
+	//and update the screen while hovering ally champion's view with camera
+	robot->fKeyDown(ally + 1);
+	Sleep(getKeyClickDuration());
+	robot->updateScreenBuffer();
+	robot->fKeyUp(ally + 1);
+
+	//checks if the top left and bottom right corners of the minimap's champion
+	//camera white box to see if the champion is centered on the point p
+	return robot->isPixelSimilar(Pixel{ {p.x + xLeftOffset, p.y + yLeftOffset}, 255, 255, 255 }, tolerance) &&
+		   robot->isPixelSimilar(Pixel{ {p.x + xRightOffset, p.y + yRightOffset}, 255, 255, 255 }, tolerance);
+}
+
+bool YuumiBot::isDragonAlive() {
+	return robot->isPixelSimilar(DRAGON_ON_MINIMAP, tolerance) &&
+		getSeconds(getTimeUntil(dragonSpawn)) < 0;
+}
+
+bool YuumiBot::isEUsable() {
+	return robot->isPixelSimilar(E_USABLE, tolerance);
+}
+
+bool YuumiBot::isNewGame() {
+	//if all item slots are empty, assume it's a new game
+	return robot->isPixelSimilar(EMPTY_ITEM_SLOT_1, tolerance) &&
+		   robot->isPixelSimilar(EMPTY_ITEM_SLOT_2, tolerance) &&
+		   robot->isPixelSimilar(EMPTY_ITEM_SLOT_3, tolerance) &&
+		   robot->isPixelSimilar(EMPTY_ITEM_SLOT_4, tolerance) &&
+		   robot->isPixelSimilar(EMPTY_ITEM_SLOT_5, tolerance) &&
+		   robot->isPixelSimilar(EMPTY_ITEM_SLOT_6, tolerance);
+}
+
+bool YuumiBot::isQUsable() {
+	return robot->isPixelSimilar(Q_USABLE, tolerance);
+}
+
+bool YuumiBot::isRiftHeraldAlive() {
+	return robot->isPixelSimilar(RIFT_HERALD_ON_MINIMAP, tolerance) &&
+		getSeconds(getTimeUntil(riftHeraldSpawn)) < 0;
+}
+
+bool YuumiBot::isRUsable() {
+	return robot->isPixelSimilar(R_USABLE, tolerance);
+}
+
+bool YuumiBot::isTeamOnBlueSide() {
+	return robot->isPixelSimilar(RED_BASE_FOG, tolerance);
+}
+
+bool YuumiBot::isWUsable() {
+	return robot->isPixelSimilar(W_USABLE, tolerance);
+}
+
+bool YuumiBot::isYuumiAlive() {
+	return robot->isPixelSimilar(YUUMI_HUD_ICON, tolerance);
+}
+
+bool YuumiBot::isYuumiAttached() {
+	//maybe use W pixels or something on HUD
+}
+
+bool YuumiBot::isYuumiInBase() {
+	return robot->isPixelSimilar(SHOP_BRIGHT, tolerance);
+}
+
+bool YuumiBot::isYuumiLevelUp() {
+	return robot->isPixelSimilar(CAN_LEVEL_UP_ABILITY, tolerance);
+}
