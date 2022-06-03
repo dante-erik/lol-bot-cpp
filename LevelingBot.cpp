@@ -273,7 +273,7 @@ bool LevelingBot::isNewGame() {
 }
 
 steady_clock::time_point LevelingBot::getGameTime() {
-	return steady_clock::time_point(steady_clock::now() - gameStart);
+	return static_cast<steady_clock::time_point>(steady_clock::now() - gameStart);
 }
 
 bool LevelingBot::updateHealth() {
