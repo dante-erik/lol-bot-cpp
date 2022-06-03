@@ -9,9 +9,9 @@ enum ally{
 
 class YuumiBot {
 private:
-	//each ally's portrait over minimap, 2 pixels per ally
+	//each ally's portrait over minimap
 	Pixel allyIcon[5];
-	//all allies HP, only YUUMI mana
+	//all allies HP including Yuumi
 	float health[5], weightedKDA[5];
 	int kills[5], deaths[5], assists[5], currentAlly;
 	//used for Robot
@@ -80,8 +80,8 @@ private:
 	void waitForFullHealth();
 
 	//PIXEL CHECKING:
-	//note: there's so many of these methods because the names
-	//are self-documenting and helpful when thinking about logic in other methods
+	//note: there's so many of these methods because the method names
+	//are supposed to be self-documenting for readability
 	bool didAllyAssist(int ally);
 	bool didAllyDie(int ally);
 	bool didAllyKill(int ally);
@@ -93,9 +93,6 @@ private:
 	bool isAnyEnemyDead();
 	bool isBaronAlive();
 	bool isCameraLocked();
-	//use white box on minimap
-	bool isChampInBase(int ally);
-	//if redside changes the offsets, will need a bool for which side you're on then
 	bool isChampStandingOnPoint(POINT p, int ally);
 	bool isDragonAlive();
 	bool isEUsable();
@@ -103,6 +100,7 @@ private:
 	bool isQUsable();
 	bool isRiftHeraldAlive();
 	bool isRUsable();
+	bool isTeamOnBlueSide();
 	bool isWUsable();
 	//specific to checking only if Yuumi is alive, not other champs
 	bool isYuumiAlive();
