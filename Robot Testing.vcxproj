@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ClientLevelingBot.hpp" />
     <ClInclude Include="DirectInputKeyboardScancodes.hpp" />
     <ClInclude Include="LeaguePixelsAndPoints.hpp" />
     <ClInclude Include="LevelingBot.hpp" />
@@ -29,6 +30,7 @@
     <ClInclude Include="YuumiBotPixelsAndPoints.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ClientLevelingBot.cpp" />
     <ClCompile Include="LevelingBot.cpp" />
     <ClCompile Include="LevelingBotDriver.cpp" />
     <ClCompile Include="Robot.cpp" />

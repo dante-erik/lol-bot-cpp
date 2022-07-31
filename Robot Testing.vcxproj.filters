@@ -57,6 +57,9 @@
     <ClInclude Include="LevelingBotPixelsAndPoints.hpp">
       <Filter>Header Files\LevelingBot</Filter>
     </ClInclude>
+    <ClInclude Include="ClientLevelingBot.hpp">
+      <Filter>Header Files\LevelingBot</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LevelingBot.cpp">
@@ -76,6 +79,9 @@
     </ClCompile>
     <ClCompile Include="YuumiBotDriver.cpp">
       <Filter>Source Files\YuumiBot</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientLevelingBot.cpp">
+      <Filter>Source Files\LevelingBot</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
