@@ -4,8 +4,8 @@
 
 using namespace std::chrono;
 
-LevelingBot::LevelingBot()
-	: health(1.0),
+LevelingBot::LevelingBot():
+	health(1.0),
 	mana(1.0),
 	tolerance(0),
 	keyClickDuration(140),
@@ -13,11 +13,11 @@ LevelingBot::LevelingBot()
 	mouseClickDuration(70),
 	mouseClickDurationRandomness(30),
 	gameStart(steady_clock::now()),
-	robot(std::make_unique<Robot>())
-	//clientBot(std::make_unique<LevelingClientBot>())
-{ }
+	robot(std::make_unique<Robot>()),
+	clientBot(std::make_unique<ClientLevelingBot>())
+{}
 
-LevelingBot::~LevelingBot() { }
+LevelingBot::~LevelingBot() {}
 
 void LevelingBot::runBot() {
 	while (true) {
@@ -26,12 +26,9 @@ void LevelingBot::runBot() {
 		if (robot->isPixelSimilar(IN_GAME_HUD, tolerance)) {
 			playGame();
 		}
-		else if (robot->isPixelSimilar(CLIENT_BORDER, tolerance)) {
-			std::cout << "out of game stuff" << std::endl;
-			//outOfGameBot->clientActions();
-		}
 		else {
-			std::cout << "nothing visible" << std::endl;
+			std::cout << "out of game stuff" << std::endl;
+			clientBot->clientActions();
 		}
 	}
 }
@@ -65,9 +62,7 @@ bool LevelingBot::attack() {
 	//ability casting section
 	//health < 0.95 (in combat)
 	//q or w usable, otherwise updating mana is a waste of time
-	if (health < 0.95 &&
-	   (robot->isPixelSimilar(Q_USABLE, tolerance) ||
-		robot->isPixelSimilar(W_USABLE, tolerance))) {
+	if (health < 0.95) {
 		updateMana();
 		if (mana > 0.2) {
 			if (robot->isPixelSimilar(Q_USABLE, tolerance)) {
@@ -79,6 +74,8 @@ bool LevelingBot::attack() {
 		}
 	}
 	//basic attacking section
+	//right click prevents melee attack locking on targets who run away
+	robot->rightClick(getSafeAttackLocation(), getMouseClickDuration());
 	robot->keyClick('a', getKeyClickDuration());
 	return static_cast<bool>(robot->leftClick(pointJitter(getSafeAttackLocation(), 1), getMouseClickDuration()));
 }

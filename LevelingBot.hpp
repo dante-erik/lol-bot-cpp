@@ -2,8 +2,14 @@
 #include <Windows.h>
 #include <chrono>
 #include "Robot.hpp"
+#include "ClientLevelingBot.hpp"
 
 class LevelingBot {
+public:
+	LevelingBot();
+	~LevelingBot();
+	void runBot();
+
 private:
 	double health, mana;
 	const int tolerance;
@@ -13,7 +19,7 @@ private:
 	const int mouseClickDurationRandomness;
 	std::chrono::steady_clock::time_point gameStart;
     std::unique_ptr<Robot> robot;
-	//std::unique_ptr<LevelingClientBot> clientBot;
+	std::unique_ptr<ClientLevelingBot> clientBot;
 
 	bool playGame();
 	bool startInGameTimer();
@@ -37,9 +43,4 @@ private:
 	std::chrono::steady_clock::time_point getGameTime();
 	int getMouseClickDuration();
 	int getKeyClickDuration();
-
-public:
-	LevelingBot();
-	~LevelingBot();
-	void runBot();
 };
