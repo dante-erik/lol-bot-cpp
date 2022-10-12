@@ -1,0 +1,154 @@
+#pragma once
+#include <Windows.h>
+#include "Pixel.hpp"
+
+//In-Game Pixel objects
+constexpr Pixel IN_GAME_HUD{ {658, 1073}, 27, 51, 49 };
+constexpr Pixel ABLE_TO_LEVEL_UP_Q{ {758, 915}, 255, 241, 87 };
+constexpr Pixel ABLE_TO_LEVEL_UP_W{ {824, 915}, 255, 241, 89 };
+constexpr Pixel ABLE_TO_LEVEL_UP_E{ {891, 915}, 255, 241, 87 };
+constexpr Pixel ABLE_TO_LEVEL_UP_R{ {} };
+constexpr Pixel SHOP_DARK{ {1300, 1064}, 16, 23, 24 };
+constexpr Pixel ALLY_MID_TOWER_2{ {1743, 992}, 21, 59, 71 };
+constexpr Pixel ALLY_MID_TOWER_3{ {1718, 1011}, 43, 117, 144 };
+constexpr Pixel RECALL_MID_LOCATION_1{ {} };
+constexpr Pixel RECALL_MID_LOCATION_2{ {} };
+constexpr Pixel ENEMY_MID_TOWER_1{ {1810, 928}, 160, 42, 44 };
+constexpr Pixel ENEMY_MID_TOWER_2{ {} };
+constexpr Pixel ENEMY_MID_TOWER_3{ {} };
+constexpr Pixel ENEMY_NEXUS_TOWER_LEFT{ {} };
+constexpr Pixel ENEMY_NEXUS_TOWER_RIGHT{ {} };
+constexpr Pixel TELEPORT_LEFT_USABLE{ {1027, 965}, 184, 74, 194 };
+constexpr Pixel HEAL_RIGHT_USABLE{ {1080, 967}, 131, 229, 91 };
+
+constexpr Pixel EMPTY_ITEM_SLOT_0{ {1150, 970}, 5, 14, 11 };
+constexpr Pixel EMPTY_ITEM_SLOT_1{ {1200, 970}, 5, 14, 11 };
+constexpr Pixel EMPTY_ITEM_SLOT_2{ {1250, 970}, 5, 14, 11 };
+constexpr Pixel EMPTY_ITEM_SLOT_3{ {1150, 1015}, 5, 14, 11 };
+constexpr Pixel EMPTY_ITEM_SLOT_4{ {1200, 1015}, 5, 14, 11 };
+constexpr Pixel EMPTY_ITEM_SLOT_5{ {1250, 1015}, 5, 14, 11 };
+
+constexpr Pixel MID_TOW_1{ {1810,930}, 96, 26, 26 };
+constexpr Pixel MID_TOW_2{ {1817,891}, 149, 41, 41 };
+constexpr Pixel MID_TOW_3{ {1841,872}, 182, 49, 49 };
+constexpr Pixel NEXUS_TOW_1{ {1875,847}, 172, 46, 47 };
+constexpr Pixel NEXUS_TOW_2{ {1867,839}, 182, 49, 49 };
+
+constexpr Pixel FULLISH_HP{ {1088, 1032}, 0, 193, 0 };
+constexpr Pixel LOW_HP{ {782, 1031}, 0, 81, 8 };
+
+//In-Game POINT objects
+//blue is > 100 with no tower and less than 100 with tower
+//tower 1 is a point instead of pixel cuz of tower plating changing the icon :(
+constexpr POINT ALLY_MID_TOWER_1{ 1756, 964 };
+//constexpr POINT MAX_HEALTH{ };
+//constexpr POINT ZERO_HEALTH{ };
+//constexpr POINT MAX_MANA{ };
+//constexpr POINT ZERO_MANA{ };
+//constexpr POINT ENEMY_MID_TOWER_1{ };
+//constexpr POINT ENEMY_MID_TOWER_2{ };
+//constexpr POINT ENEMY_MID_TOWER_3{ };
+//constexpr POINT ENEMY_NEXUS_TOWER_1{ };
+//constexpr POINT ENEMY_NEXUS_TOWER_2{ };
+//constexpr POINT ENEMY_MID_TOWER_1_ATTACK_LOCATION{ };
+//constexpr POINT ENEMY_MID_TOWER_2_ATTACK_LOCATION{ };
+//constexpr POINT ENEMY_MID_TOWER_3_ATTACK_LOCATION{ };
+//constexpr POINT ENEMY_NEXUS_TOWER_ATTACK_LOCATION{ };
+//constexpr POINT ENEMY_NEXUS{ };
+
+//Client Pixel objects
+constexpr Pixel FIND_MATCH_BUTTON{ {855, 855}, 14, 142, 163 };
+constexpr Pixel ACCEPT_MATCH_BUTTON{ {959, 731}, 30, 37, 42 };
+constexpr Pixel CHAMP_SELECT{ {599, 199}, 75, 59, 22 };
+constexpr Pixel HONOR_NO_TEAMMATE_ARROW{ {} };
+constexpr Pixel PLAY_AGAIN_BUTTON{ {} };
+constexpr Pixel LEVELED_UP{ {} };
+constexpr Pixel DAILY_REWARD{ {} };
+constexpr Pixel CHAMPION_REWARD{ {} };
+constexpr Pixel QUEST_REWARD{ {} };
+constexpr Pixel CHAMPION_SEARCH_BOX{ {1138, 265}, 5, 9, 11 };
+constexpr Pixel BANS{ {} };
+constexpr Pixel SUMMONER_SPELL_PANEL{ {921, 385}, 1, 10, 19 };
+constexpr Pixel CAN_OPEN_RUNES{ {756, 844}, 205, 190, 145 };
+constexpr Pixel RUNES_PANEL{ {876, 242}, 70, 55, 20 };
+constexpr Pixel CAN_EDIT_RUNE_PAGE{ {480, 291}, 204, 189, 144 };
+constexpr Pixel LOCK_IN{ {959, 778}, 30, 37, 41 };
+constexpr Pixel CHAMPION_NOT_SELECTED{ {962,759}, 30, 35, 40 };
+
+//Client POINT objects
+constexpr POINT LEVEL_UP_OK_BUTTON{ };
+constexpr POINT DAILY_REWARD_OK_BUTTON{ };
+constexpr POINT MIDDLE_CHAMPION_SELECT_BUTTON{ };
+constexpr POINT CHAMPION_REWARD_OK_BUTTON{ };
+constexpr POINT QUEST_REWARD_OK_BUTTON{ };
+constexpr POINT SEARCHED_CHAMPION_ICON{ 706, 325 };
+constexpr POINT CHAMP_SELECT_CHAT_BOX{ 460, 840 };
+constexpr POINT LEFT_SUMMONER_SPELL{ 1010, 843 };
+constexpr POINT RIGHT_SUMMONER_SPELL{ 1058, 843 };
+constexpr POINT BARRIER{ 943, 762 };
+constexpr POINT CLEANSE{ 943, 638 };
+constexpr POINT EXHAUST{ 1004, 638 };
+constexpr POINT FLASH{ 1065, 638 };
+constexpr POINT GHOST{ 1126, 638 };
+constexpr POINT HEAL{ 943, 700 };
+constexpr POINT IGNITE{ 1126, 700 };
+constexpr POINT SMITE{ 1004, 700 };
+constexpr POINT TELEPORT{ 1065, 700 };
+constexpr POINT EDIT_RUNES_BUTTON{ 757, 844 };
+constexpr POINT RUNES_GRID_MODE{ 505, 839 };
+constexpr POINT SAVE_RUNES{ 830, 291 };
+constexpr POINT EXIT_RUNES{ 1491, 240 };
+constexpr POINT PRECISION_PRIMARY_TREE{ 564, 375 };
+constexpr POINT DOMINATION_PRIMARY_TREE{ 604, 375 };
+constexpr POINT SORCERY_PRIMARY_TREE{ 644, 375 };
+constexpr POINT RESOLVE_PRIMARY_TREE{ 684, 375 };
+constexpr POINT INSPIRATION_PRIMARY_TREE{ 724, 375 };
+constexpr POINT SECONDARY_TREE_LOCATION_1{ 894, 380 };
+constexpr POINT SECONDARY_TREE_LOCATION_2{ 944, 380 };
+constexpr POINT SECONDARY_TREE_LOCATION_3{ 993, 380 };
+constexpr POINT SECONDARY_TREE_LOCATION_4{ 1044, 380 };
+constexpr POINT FOUR_KEYSTONES_LOCATION_1{ 569, 500 };
+constexpr POINT FOUR_KEYSTONES_LOCATION_2{ 619, 500 };
+constexpr POINT FOUR_KEYSTONES_LOCATION_3{ 667, 500 };
+constexpr POINT FOUR_KEYSTONES_LOCATION_4{ 717, 500 };
+constexpr POINT THREE_KEYSTONES_LOCATION_1{ 580, 500 };
+constexpr POINT THREE_KEYSTONES_LOCATION_2{ 644, 500 };
+constexpr POINT THREE_KEYSTONES_LOCATION_3{ 710, 500 };
+constexpr POINT PRIMARY_RUNE_SLOT_1_LOCATION_1{ 578, 594 };
+constexpr POINT PRIMARY_RUNE_SLOT_1_LOCATION_2{ 645, 594 };
+constexpr POINT PRIMARY_RUNE_SLOT_1_LOCATION_3{ 709, 594 };
+constexpr POINT PRIMARY_RUNE_SLOT_2_LOCATION_1{ 578, 681 };
+constexpr POINT PRIMARY_RUNE_SLOT_2_LOCATION_2{ 645, 681 };
+constexpr POINT PRIMARY_RUNE_SLOT_2_LOCATION_3{ 709, 681 };
+constexpr POINT PRIMARY_RUNE_SLOT_3_LOCATION_1{ 578, 770 };
+constexpr POINT PRIMARY_RUNE_SLOT_3_LOCATION_2{ 645, 770 };
+constexpr POINT PRIMARY_RUNE_SLOT_3_LOCATION_3{ 709, 770 };
+constexpr POINT PRIMARY_RUNE_SLOT_3_TREASURE_HUNTER{ 569, 770 };
+constexpr POINT PRIMARY_RUNE_SLOT_3_INGENIUS_HUNTER{ 619, 770 };
+constexpr POINT PRIMARY_RUNE_SLOT_3_RELENTLESS_HUNTER{ 668, 770 };
+constexpr POINT PRIMARY_RUNE_SLOT_3_ULTIMATE_HUNTER{ 718, 770 };
+constexpr POINT SECONDARY_RUNE_SLOT_1_LOCATION_1{ 903, 466 };
+constexpr POINT SECONDARY_RUNE_SLOT_1_LOCATION_2{ 969, 466 };
+constexpr POINT SECONDARY_RUNE_SLOT_1_LOCATION_3{ 1035, 466 };
+constexpr POINT SECONDARY_RUNE_SLOT_2_LOCATION_1{ 903, 545 };
+constexpr POINT SECONDARY_RUNE_SLOT_2_LOCATION_2{ 969, 545 };
+constexpr POINT SECONDARY_RUNE_SLOT_2_LOCATION_3{ 1035, 545 };
+constexpr POINT SECONDARY_RUNE_SLOT_3_LOCATION_1{ 903, 622 };
+constexpr POINT SECONDARY_RUNE_SLOT_3_LOCATION_2{ 969, 622 };
+constexpr POINT SECONDARY_RUNE_SLOT_3_LOCATION_3{ 1035, 622 };
+constexpr POINT SECONDARY_RUNE_SLOT_3_TREASURE_HUNTER{ 984, 622 };
+constexpr POINT SECONDARY_RUNE_SLOT_3_INGENIUS_HUNTER{ 944, 622 };
+constexpr POINT SECONDARY_RUNE_SLOT_3_RELENTLESS_HUNTER{ 993, 622 };
+constexpr POINT SECONDARY_RUNE_SLOT_3_ULTIMATE_HUNTER{ 1044, 622 };
+constexpr POINT SLOT_1_ADAPTIVE_FORCE{ 903, 681 };
+constexpr POINT SLOT_1_ATTACK_SPEED{ 969, 681 };
+constexpr POINT SLOT_1_ABILITY_HASTE{ 1035, 681 };
+constexpr POINT SLOT_2_ADAPTIVE_FORCE{ 903, 726 };
+constexpr POINT SLOT_2_ARMOR{ 969, 726 };
+constexpr POINT SLOT_2_MAGIC_RESIST{ 1035, 726 };
+constexpr POINT SLOT_3_HEALTH{ 903, 770 };
+constexpr POINT SLOT_3_ARMOR{ 969, 770 };
+constexpr POINT SLOT_3_MAGIC_RESIST{ 1035, 770 };
+
+//Misc POINT objects
+constexpr POINT CURSOR_OFF_CLIENT{ 960, 1020 };
