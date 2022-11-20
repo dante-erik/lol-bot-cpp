@@ -18,9 +18,7 @@
 			debugDelay = 750;
 		}
 
-		OutOfGameBot::~OutOfGameBot() {
-			//idk what to delete here ngl
-		}
+		OutOfGameBot::~OutOfGameBot() {}
 		
 		BYTE OutOfGameBot::clientActions(){
 			//avoids highlighting buttons on the client
@@ -28,9 +26,7 @@
 			//Sleep(1000);
 
 			//complete one of these LoL Client actions, then break from the else if chain to update the screen buffer
-			//std::cout << "I'm about to do what's called a pro gamer move" << std::endl;
 			robot->updateScreenBuffer();
-			//std::cout << "Jk Lmao" << std::endl;
 			if (findMatch()) { std::cout << "findMatch() finished\n\n"; return 1; }
 			else if (acceptMatch()) { std::cout << "acceptMatch() finished\n\n"; return 2; }
 			else if (champSelect()) { std::cout << "champSelect() finished\n\n"; return 3; }

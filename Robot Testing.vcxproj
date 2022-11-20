@@ -19,20 +19,26 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AsheMidBot.hpp" />
     <ClInclude Include="ClientLevelingBot.hpp" />
     <ClInclude Include="DirectInputKeyboardScancodes.hpp" />
     <ClInclude Include="LeaguePixelsAndPoints.hpp" />
+    <ClInclude Include="LeaguePointsAndPixels.hpp" />
+    <ClInclude Include="LeagueStructs.hpp" />
     <ClInclude Include="LevelingBot.hpp" />
     <ClInclude Include="LevelingBotPixelsAndPoints.hpp" />
+    <ClInclude Include="OutOfGameBot.hpp" />
     <ClInclude Include="Pixel.hpp" />
     <ClInclude Include="Robot.hpp" />
     <ClInclude Include="YuumiBot.hpp" />
     <ClInclude Include="YuumiBotPixelsAndPoints.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AsheMidBot.cpp" />
     <ClCompile Include="ClientLevelingBot.cpp" />
     <ClCompile Include="LevelingBot.cpp" />
     <ClCompile Include="LevelingBotDriver.cpp" />
+    <ClCompile Include="OutOfGameBot.cpp" />
     <ClCompile Include="Robot.cpp" />
     <ClCompile Include="RobotDriver.cpp" />
     <ClCompile Include="YuumiBot.cpp" />

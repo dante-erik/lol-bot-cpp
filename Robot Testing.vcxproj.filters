@@ -31,6 +31,9 @@
     <Filter Include="Source Files\YuumiBot">
       <UniqueIdentifier>{dd82fdaa-6218-4e90-b7f9-32a08c322bd0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Old League Bot Code">
+      <UniqueIdentifier>{900ff83e-c33b-4251-8197-304b91c01957}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LeaguePixelsAndPoints.hpp">
@@ -60,6 +63,18 @@
     <ClInclude Include="ClientLevelingBot.hpp">
       <Filter>Header Files\LevelingBot</Filter>
     </ClInclude>
+    <ClInclude Include="OutOfGameBot.hpp">
+      <Filter>Source Files\Old League Bot Code</Filter>
+    </ClInclude>
+    <ClInclude Include="LeagueStructs.hpp">
+      <Filter>Source Files\Old League Bot Code</Filter>
+    </ClInclude>
+    <ClInclude Include="LeaguePointsAndPixels.hpp">
+      <Filter>Source Files\Old League Bot Code</Filter>
+    </ClInclude>
+    <ClInclude Include="AsheMidBot.hpp">
+      <Filter>Source Files\Old League Bot Code</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LevelingBot.cpp">
@@ -82,6 +97,12 @@
     </ClCompile>
     <ClCompile Include="ClientLevelingBot.cpp">
       <Filter>Source Files\LevelingBot</Filter>
+    </ClCompile>
+    <ClCompile Include="OutOfGameBot.cpp">
+      <Filter>Source Files\Old League Bot Code</Filter>
+    </ClCompile>
+    <ClCompile Include="AsheMidBot.cpp">
+      <Filter>Source Files\Old League Bot Code</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
