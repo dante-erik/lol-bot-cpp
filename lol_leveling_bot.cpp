@@ -21,6 +21,16 @@ int getRandomNumber(const int& min, const int& max) {
 	return rng->operator()() % (max - min + 1) + min;
 }
 
+
+void selectRandomChampion() {
+	//in pixel coor units
+	constexpr int X_CHAMPION_ICON_OFFSET = 101;
+	constexpr int Y_CHAMPION_ICON_OFFSET = 96;
+	Pixel championIcon = { {TOP_LEFT_CHAMPION_ICON.p.x + X_CHAMPION_ICON_OFFSET * getRandomNumber(0, 6),
+							TOP_LEFT_CHAMPION_ICON.p.y + Y_CHAMPION_ICON_OFFSET * getRandomNumber(0, 3)} };
+	LEFT_CLICK(championIcon);
+}
+
 void championSelectActions() {
 	//loop until champion is locked in & still in champion select
 	while (!VISIBLE(CHAMPION_LOCKED_IN) && VISIBLE(CHAMPION_SELECT)) {
@@ -32,14 +42,6 @@ void championSelectActions() {
 	}
 }
 
-void selectRandomChampion() {
-	//in pixel coor units
-	constexpr int X_CHAMPION_ICON_OFFSET = 101;
-	constexpr int Y_CHAMPION_ICON_OFFSET = 96;
-	Pixel championIcon = { {TOP_LEFT_CHAMPION_ICON.p.x + X_CHAMPION_ICON_OFFSET * getRandomNumber(0, 6),
-							TOP_LEFT_CHAMPION_ICON.p.y + Y_CHAMPION_ICON_OFFSET * getRandomNumber(0, 3)} };
-	LEFT_CLICK(championIcon);
-}
 
 void acceptChampionReward() {
 	LEFT_CLICK(CHAMPION_REWARD_SELECT_BUTTON);
@@ -127,6 +129,9 @@ void clientActions(bool& isNewGame) {
 	}
 	else if (VISIBLE(PROBLEM_SELECTING_YOUR_CHAMPION) || VISIBLE(PROBLEM_SELECTING_YOUR_CHAMPION_HIGHLIGHTED)) {
 		LEFT_CLICK(PROBLEM_SELECTING_YOUR_CHAMPION);
+	}
+	else if (VISIBLE(CHALLENGE_TIER_UP)) {
+		LEFT_CLICK(CHALLENGE_TIER_UP);
 	}
 }
 
