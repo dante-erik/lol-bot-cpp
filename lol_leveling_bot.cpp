@@ -1,6 +1,7 @@
 #include "Robot.hpp"
 #include "LeaguePixels.hpp"
 #include <memory>
+#include <random>
 
 #define VISIBLE(pixelName) robot->isPixelEqual(pixelName)
 #define LEFT_CLICK(pointName) robot->leftClick(pointName.p, clickDuration)
@@ -9,18 +10,35 @@
 //simulates all the input events as if a human were inputting mouse / keyboard events
 std::unique_ptr<Robot> robot = std::make_unique<Robot>();
 
+//random number generator
+std::unique_ptr<std::mt19937> rng = std::make_unique<std::mt19937>();
+std::mt19937 test = std::mt19937();
+
 //milliseconds for click events using mouse and keyboard
 constexpr int clickDuration = 50;
+
+int getRandomNumber(const int& min, const int& max) {
+	return rng->operator()() % (max - min + 1) + min;
+}
 
 void championSelectActions() {
 	//loop until champion is locked in & still in champion select
 	while (!VISIBLE(CHAMPION_LOCKED_IN) && VISIBLE(CHAMPION_SELECT)) {
 
-		LEFT_CLICK(TOP_LEFT_CHAMPION_ICON);
+		selectRandomChampion();
 		LEFT_CLICK(LOCK_IN);
 
 		robot->updateScreenBuffer();
 	}
+}
+
+void selectRandomChampion() {
+	//in pixel coor units
+	constexpr int X_CHAMPION_ICON_OFFSET = 101;
+	constexpr int Y_CHAMPION_ICON_OFFSET = 96;
+	Pixel championIcon = { {TOP_LEFT_CHAMPION_ICON.p.x + X_CHAMPION_ICON_OFFSET * getRandomNumber(0, 6),
+							TOP_LEFT_CHAMPION_ICON.p.y + Y_CHAMPION_ICON_OFFSET * getRandomNumber(0, 3)} };
+	LEFT_CLICK(championIcon);
 }
 
 void acceptChampionReward() {
