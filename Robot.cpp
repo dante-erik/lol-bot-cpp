@@ -51,10 +51,31 @@ UINT Robot::initializeMembers() {
  * @return BOOL success or failure
  */
 UINT Robot::setCursorPos(const POINT& p) const {
+    constexpr int TOTAL_MOUSE_STEPS = 500;
+
+    POINT startingCursorPos;
+    GetCursorPos(&startingCursorPos);
+
+    POINT inbetweenPoint;
+
     mouseInput.mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE;
-    mouseInput.mi.dx = static_cast<LONG>(65535. * p.x / _width);
-    mouseInput.mi.dy = static_cast<LONG>(65535. * p.y / _height);
-    UINT count = SendInput(1, &mouseInput, sizeof(mouseInput));
+
+    UINT count = 0;
+    double percentOfDistanceTraveled = 0.0;
+    int pixelsToTravelX = p.x - startingCursorPos.x;
+    int pixelsToTravelY = p.y - startingCursorPos.y;
+
+    for (int mouseSteps = 0; mouseSteps < TOTAL_MOUSE_STEPS; mouseSteps++) {
+        percentOfDistanceTraveled = static_cast<double>(mouseSteps) / TOTAL_MOUSE_STEPS;
+
+        inbetweenPoint = { static_cast<LONG>(startingCursorPos.x + pixelsToTravelX * percentOfDistanceTraveled),
+                           static_cast<LONG>(startingCursorPos.y + pixelsToTravelY * percentOfDistanceTraveled) };
+
+        mouseInput.mi.dx = static_cast<LONG>(65535. * inbetweenPoint.x / _width);
+        mouseInput.mi.dy = static_cast<LONG>(65535. * inbetweenPoint.y / _height);
+        count += SendInput(1, &mouseInput, sizeof(mouseInput));
+    }
+
     mouseInput.mi.dx = 0;
     mouseInput.mi.dy = 0;
     return count;
