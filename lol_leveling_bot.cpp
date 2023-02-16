@@ -77,13 +77,18 @@ void buyItem(const char* itemName) {
 }
 
 void moveRandomlyIntoMidLane() {
+	constexpr int waitTimeAfterBuyingStartingItem = 20000;
+	Sleep(waitTimeAfterBuyingStartingItem);
+
 	constexpr int sleepDurationBetweenRightClicks = 1000;
 
-	constexpr int millisecondsBeforeMinionsSpawn = 60000;
+	constexpr int durationBeforeMinionsSpawn = 60000;
+
+	constexpr int durationBeforeMoving = durationBeforeMinionsSpawn - waitTimeAfterBuyingStartingItem;
 
 	constexpr int durationBetweenRightClicks = sleepDurationBetweenRightClicks + (clickDurationMin + clickDurationMax) / 2;
 
-	int totalRightClickInputs = millisecondsBeforeMinionsSpawn / durationBetweenRightClicks;
+	int totalRightClickInputs = durationBeforeMoving / durationBetweenRightClicks;
 
 	Pixel randomPlaceToMoveChampionTo;
 
@@ -106,9 +111,6 @@ void gameActions(bool& isNewGame) {
 		else {
 			buyItem("relic");
 		}
-
-		constexpr int waitTimeAfterBuyingStartingItem = 20000;
-		Sleep(waitTimeAfterBuyingStartingItem);
 
 		//wait for minions to spawn without getting AFK warnings by sitting in base
 		moveRandomlyIntoMidLane();
