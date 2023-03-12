@@ -4,10 +4,10 @@
 #include <random>
 
 #define VISIBLE(pixelName) robot->isPixelEqual(pixelName)
-//left clicks within mouseInaccuracy pixels of pixelName's x and y, and holds down the mouse button for between clickDurationMin and clickDurationMax milliseconds
-#define LEFT_CLICK(pixelName) robot->leftClick(Pixel{{pixelName.p.x - mouseInaccuracy + getRandomNumber(0, mouseInaccuracy * 2), pixelName.p.y - 1 + getRandomNumber(0, 2)}}.p, getRandomNumber(clickDurationMin, clickDurationMax))
-//right clicks within mouseInaccuracy pixels of pixelName's x and y, and holds down the mouse button for between clickDurationMin and clickDurationMax milliseconds
-#define RIGHT_CLICK(pixelName) robot->rightClick(Pixel{{pixelName.p.x - mouseInaccuracy + getRandomNumber(0, mouseInaccuracy * 2), pixelName.p.y - 1 + getRandomNumber(0, 2)}}.p, getRandomNumber(clickDurationMin, clickDurationMax))
+//left clicks within MOUSE_INACCURACY pixels of pixelName's x and y, and holds down the mouse button for between CLICK_DURATION_MIN and CLICK_DURATION_MAX milliseconds
+#define LEFT_CLICK(pixelName) robot->leftClick(Pixel{{pixelName.p.x - MOUSE_INACCURACY + getRandomNumber(0, MOUSE_INACCURACY * 2), pixelName.p.y - 1 + getRandomNumber(0, 2)}}.p, getRandomNumber(CLICK_DURATION_MIN, CLICK_DURATION_MAX))
+//right clicks within MOUSE_INACCURACY pixels of pixelName's x and y, and holds down the mouse button for between CLICK_DURATION_MIN and CLICK_DURATION_MAX milliseconds
+#define RIGHT_CLICK(pixelName) robot->rightClick(Pixel{{pixelName.p.x - MOUSE_INACCURACY + getRandomNumber(0, MOUSE_INACCURACY * 2), pixelName.p.y - 1 + getRandomNumber(0, 2)}}.p, getRandomNumber(CLICK_DURATION_MIN, CLICK_DURATION_MAX))
 
 //simulates all the input events as if a human were inputting mouse / keyboard events
 std::unique_ptr<Robot> robot = std::make_unique<Robot>();
@@ -16,14 +16,14 @@ std::unique_ptr<Robot> robot = std::make_unique<Robot>();
 std::unique_ptr<std::mt19937> rng = std::make_unique<std::mt19937>();
 
 //milliseconds for click events using mouse and keyboard
-constexpr int clickDurationMax = 70;
-constexpr int clickDurationMin = 40;
+constexpr int CLICK_DURATION_MAX = 70;
+constexpr int CLICK_DURATION_MIN = 40;
 
 //how many pixels the LEFT_CLICK and RIGHT_CLICK macros can click away from the given pixel value x and y
-constexpr int mouseInaccuracy = 2;
+constexpr int MOUSE_INACCURACY = 2;
 
-int getRandomNumber(const int& min, const int& max) {
-	return rng->operator()() % (max - min + 1) + min;
+int getRandomNumber(const int& MIN, const int& MAX) {
+	return rng->operator()() % (MAX - MIN + 1) + MIN;
 }
 
 
@@ -56,34 +56,34 @@ void acceptChampionReward() {
 }
 
 void levelUpAbilities() {
-	robot->ctrlPlusKeyClick("rqwe", getRandomNumber(clickDurationMin, clickDurationMax));
+	robot->ctrlPlusKeyClick("rqwe", getRandomNumber(CLICK_DURATION_MIN, CLICK_DURATION_MAX));
 }
 
-void buyItem(const char* itemName) {
+void buyItem(const char* ITEM_NAME) {
 	//open shop
-	robot->keyClick('p', getRandomNumber(clickDurationMin, clickDurationMax));
+	robot->keyClick('p', getRandomNumber(CLICK_DURATION_MIN, CLICK_DURATION_MAX));
 
 	//shop search bar hotkey
-	robot->ctrlPlusKeyClick('l', getRandomNumber(clickDurationMin, clickDurationMax));
+	robot->ctrlPlusKeyClick('l', getRandomNumber(CLICK_DURATION_MIN, CLICK_DURATION_MAX));
 
 	//search for item
-	robot->keyClick(itemName, getRandomNumber(clickDurationMin, clickDurationMax));
+	robot->keyClick(ITEM_NAME, getRandomNumber(CLICK_DURATION_MIN, CLICK_DURATION_MAX));
 
 	//buy item
-	robot->enterKeyClick(getRandomNumber(clickDurationMin, clickDurationMax));
+	robot->enterKeyClick(getRandomNumber(CLICK_DURATION_MIN, CLICK_DURATION_MAX));
 
 	//close shop
-	robot->escapeKeyClick(getRandomNumber(clickDurationMin, clickDurationMax));
+	robot->escapeKeyClick(getRandomNumber(CLICK_DURATION_MIN, CLICK_DURATION_MAX));
 }
 
 void moveRandomlyIntoMidLane() {
-	constexpr int sleepDurationBetweenRightClicks = 1000;
+	constexpr int SLEEP_DURATION_BETWEEN_RIGHT_CLICKS = 1000;
 
-	constexpr int millisecondsBeforeMinionsSpawn = 60000;
+	constexpr int MILLISECONDS_BEFORE_MINIONS_SPAWN = 60000;
 
-	constexpr int durationBetweenRightClicks = sleepDurationBetweenRightClicks + (clickDurationMin + clickDurationMax) / 2;
+	constexpr int DURATION_BETWEEN_RIGHT_CLICKS = SLEEP_DURATION_BETWEEN_RIGHT_CLICKS + (CLICK_DURATION_MIN + CLICK_DURATION_MAX) / 2;
 
-	int totalRightClickInputs = millisecondsBeforeMinionsSpawn / durationBetweenRightClicks;
+	int totalRightClickInputs = MILLISECONDS_BEFORE_MINIONS_SPAWN / DURATION_BETWEEN_RIGHT_CLICKS;
 
 	Pixel randomPlaceToMoveChampionTo;
 
@@ -92,7 +92,7 @@ void moveRandomlyIntoMidLane() {
 		randomPlaceToMoveChampionTo = { {getRandomNumber(1920 / 2, 1920 - 1920 / 4), getRandomNumber(0 + 1080 / 4, 1080 / 2)} };
 
 		RIGHT_CLICK(randomPlaceToMoveChampionTo);
-		Sleep(sleepDurationBetweenRightClicks);
+		Sleep(SLEEP_DURATION_BETWEEN_RIGHT_CLICKS);
 	}
 }
 
@@ -107,8 +107,8 @@ void gameActions(bool& isNewGame) {
 			buyItem("relic");
 		}
 
-		constexpr int waitTimeAfterBuyingStartingItem = 20000;
-		Sleep(waitTimeAfterBuyingStartingItem);
+		constexpr int SLEEP_TIME_AFTER_BUYING_STARTING_ITEM = 20000;
+		Sleep(SLEEP_TIME_AFTER_BUYING_STARTING_ITEM);
 
 		//wait for minions to spawn without getting AFK warnings by sitting in base
 		moveRandomlyIntoMidLane();
@@ -118,7 +118,7 @@ void gameActions(bool& isNewGame) {
 	levelUpAbilities();
 	//health > 30%, attack enemy base
 	if (VISIBLE(LOW_HEALTH)) {
-		robot->keyClick('a', getRandomNumber(clickDurationMin, clickDurationMax));
+		robot->keyClick('a', getRandomNumber(CLICK_DURATION_MIN, CLICK_DURATION_MAX));
 		LEFT_CLICK(ENEMY_NEXUS);
 	}
 	//health < 30%, walk to ally base and wait until full health is reached
