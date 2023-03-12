@@ -77,17 +77,21 @@ void buyItem(const char* ITEM_NAME) {
 }
 
 void moveRandomlyIntoMidLane() {
+	constexpr int SLEEP_DURATION_AFTER_BUYING_STARTING_ITEMS = 20000;
+	Sleep(SLEEP_DURATION_AFTER_BUYING_STARTING_ITEMS);
+
+	constexpr int DURATION_BEFORE_MINIONS_SPAWN = 60000;
+	constexpr int DURATION_BEFORE_MOVING = DURATION_BEFORE_MINIONS_SPAWN - SLEEP_DURATION_AFTER_BUYING_STARTING_ITEMS;
+
 	constexpr int SLEEP_DURATION_BETWEEN_RIGHT_CLICKS = 1000;
+	constexpr int AVERAGE_CLICK_DURATION = (CLICK_DURATION_MIN + CLICK_DURATION_MAX) / 2;
+	constexpr int TOTAL_DURATION_BETWEEN_RIGHT_CLICKS = SLEEP_DURATION_BETWEEN_RIGHT_CLICKS + AVERAGE_CLICK_DURATION;
 
-	constexpr int MILLISECONDS_BEFORE_MINIONS_SPAWN = 60000;
-
-	constexpr int DURATION_BETWEEN_RIGHT_CLICKS = SLEEP_DURATION_BETWEEN_RIGHT_CLICKS + (CLICK_DURATION_MIN + CLICK_DURATION_MAX) / 2;
-
-	int totalRightClickInputs = MILLISECONDS_BEFORE_MINIONS_SPAWN / DURATION_BETWEEN_RIGHT_CLICKS;
+	constexpr int TOTAL_RIGHT_CLICK_INPUTS = DURATION_BEFORE_MOVING / TOTAL_DURATION_BETWEEN_RIGHT_CLICKS;
 
 	Pixel randomPlaceToMoveChampionTo;
 
-	for (int rightClickInputs = 0; rightClickInputs < totalRightClickInputs; rightClickInputs++) {
+	for (int rightClickInputs = 0; rightClickInputs < TOTAL_RIGHT_CLICK_INPUTS; rightClickInputs++) {
 		//should be some random location in the top right quadrant of a 1920x1080 screen the champion can walk to before minions spawn
 		randomPlaceToMoveChampionTo = { {getRandomNumber(1920 / 2, 1920 - 1920 / 4), getRandomNumber(0 + 1080 / 4, 1080 / 2)} };
 
@@ -106,9 +110,6 @@ void gameActions(bool& isNewGame) {
 		else {
 			buyItem("relic");
 		}
-
-		constexpr int SLEEP_TIME_AFTER_BUYING_STARTING_ITEM = 20000;
-		Sleep(SLEEP_TIME_AFTER_BUYING_STARTING_ITEM);
 
 		//wait for minions to spawn without getting AFK warnings by sitting in base
 		moveRandomlyIntoMidLane();
