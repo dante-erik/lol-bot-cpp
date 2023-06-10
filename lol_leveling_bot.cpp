@@ -169,6 +169,12 @@ void clientActions(bool& isNewGame) {
 	else if (VISIBLE(CHALLENGE_TIER_UP)) {
 		LEFT_CLICK(CHALLENGE_TIER_UP);
 	}
+	else if (VISIBLE(KEY_FRAGMENT_REWARD)) {
+		LEFT_CLICK(KEY_FRAGMENT_REWARD);
+	}/*
+	else {
+		LEFT_CLICK(PROBLEM_SELECTING_YOUR_CHAMPION);
+	}*/
 }
 
 

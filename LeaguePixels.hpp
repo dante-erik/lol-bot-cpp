@@ -28,8 +28,9 @@ constexpr Pixel LOCK_IN{ {959, 766} };
 constexpr Pixel CHAMPION_REWARD_SELECT_BUTTON{ {943, 547} };
 constexpr Pixel CHAMPION_REWARD_OKAY_BUTTON{ {959, 831} };
 //this encompasses rewards from leveling up, daily bonus, missions, and quests
-constexpr Pixel GENERIC_REWARD{ {961, 835}, 139, 132, 107 };
+constexpr Pixel GENERIC_REWARD{ {960, 830}, 30, 35, 40 };
 constexpr Pixel GENERIC_REWARD_HIGHLIGHTED{ {961, 835}, 141, 134, 107 };
-constexpr Pixel PROBLEM_SELECTING_YOUR_CHAMPION{ {961, 549}, 157, 141, 102 };
-constexpr Pixel PROBLEM_SELECTING_YOUR_CHAMPION_HIGHLIGHTED{ {961, 549}, 206, 192, 167 };
+constexpr Pixel PROBLEM_SELECTING_YOUR_CHAMPION{ {962, 541}, 87, 62, 31 };
+constexpr Pixel PROBLEM_SELECTING_YOUR_CHAMPION_HIGHLIGHTED{ {929, 516}, 130, 128, 118 };
 constexpr Pixel CHALLENGE_TIER_UP{ {1069, 727}, 240, 230, 210 };
+constexpr Pixel KEY_FRAGMENT_REWARD{ {824, 699}, 70, 55, 20 };
