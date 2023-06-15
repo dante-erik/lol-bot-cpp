@@ -169,6 +169,12 @@ void clientActions(bool& isNewGame) {
 	else if (VISIBLE(CHALLENGE_TIER_UP)) {
 		LEFT_CLICK(CHALLENGE_TIER_UP);
 	}
+	else if (VISIBLE(VERIFY_EMAIL)) {
+		LEFT_CLICK(VERIFY_EMAIL);
+	}
+	else if (VISIBLE(SKIP_WAITING_FOR_STATS)) {
+		LEFT_CLICK(SKIP_WAITING_FOR_STATS);
+	}
 }
 
 
