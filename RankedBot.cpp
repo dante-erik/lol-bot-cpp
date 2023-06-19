@@ -105,12 +105,19 @@ void setRunesAndSummonerSpells() {
 	//check if you need to exit the recc runes page after choosing an option
 }
 
+void waitUntilChampionSelectEnds() {
+	while (VISIBLE(CHAMPION_SELECT)) {
+		robot->updateScreenBuffer();
+	}
+}
+
 void championSelectActions() {
 	waitUntilBanPhase();
 	banNone();
 	waitUntilAbleToPickChampion();
 	pickChampion();
 	setRunesAndSummonerSpells();
+	waitUntilChampionSelectEnds();
 }
 
 
