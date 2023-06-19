@@ -5,7 +5,6 @@
 //if only an {x, y} point is given without an RGB, the pixel is never used for comparisons
 
 constexpr Pixel GAME_HUD{ {1331, 1060}, 138, 121, 74 };
-constexpr Pixel SKILL_POINT{ {} };
 constexpr Pixel ALLY_BASE{ {1666, 1055} };
 constexpr Pixel ENEMY_NEXUS{ {1882, 844} };
 constexpr Pixel FIND_MATCH{ {847, 831}, 20, 62, 85 };
@@ -31,3 +30,17 @@ constexpr Pixel PROBLEM_SELECTING_YOUR_CHAMPION_HIGHLIGHTED{ {961, 549}, 206, 19
 constexpr Pixel CHALLENGE_TIER_UP{ {1069, 727}, 240, 230, 210 };
 constexpr Pixel VERIFY_EMAIL{ {1211, 251}, 205, 190, 145 };
 constexpr Pixel SKIP_WAITING_FOR_STATS{ {840, 748}, 194, 190, 145 };
+constexpr Pixel SKILL_POINT{ {} };
+constexpr Pixel LEFT_SUMMONER_SPELL{ {} };
+constexpr Pixel RIGHT_SUMMONER_SPELL{ {} };
+constexpr Pixel FLASH_SUMMONER_SPELL{ {} };
+constexpr Pixel HEAL_SUMMONER_SPELL{ {} };
+constexpr Pixel BAN_PHASE{ {} };
+constexpr Pixel NO_BAN{ {} };
+constexpr Pixel LOCK_IN_BAN{ {} };
+constexpr Pixel ABLE_TO_PICK_CHAMPION{ {} };
+constexpr Pixel CHAMPION_SELECT_SEARCH_BOX{ {} };
+constexpr Pixel LOCK_IN_CHAMPION{ {} };
+constexpr Pixel RIOT_RECOMMENDED_RUNES_AND_SUMMONER_SPELLS{ {} };
+constexpr Pixel ALLOW_SUMMONER_SPELL_CHANGES{ {} };
+constexpr Pixel LEFT_RECOMMENDED_RUNES_AND_SUMMONER_SPELLS_OPTION{ {} };

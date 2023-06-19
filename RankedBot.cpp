@@ -2,6 +2,8 @@
 #include "LeaguePixels.hpp"
 #include <memory>
 #include <random>
+#include <array>
+#include <string>
 
 #define VISIBLE(pixelName) robot->isPixelEqual(pixelName)
 //left clicks within MOUSE_INACCURACY_PIXELS pixels of pixelName's x and y, and holds down the mouse button for between CLICK_DURATION_MIN_MILLISECONDS and CLICK_DURATION_MAX_MILLISECONDS milliseconds
@@ -30,7 +32,85 @@ int getRandomNumber(const int& MIN, const int& MAX) {
 	return rng->operator()() % (MAX - MIN + 1) + MIN;
 }
 
+void waitUntilBanPhase() {
+	while (!VISIBLE(BAN_PHASE) && VISIBLE(CHAMPION_SELECT)) {
+		robot->updateScreenBuffer();
+	}
+}
+
+void banNone() {
+	robot->updateScreenBuffer();
+	if (VISIBLE(BAN_PHASE)) {
+		LEFT_CLICK(NO_BAN);
+		LEFT_CLICK(LOCK_IN_BAN);
+	}
+}
+
+void waitUntilAbleToPickChampion() {
+	while (!VISIBLE(ABLE_TO_PICK_CHAMPION) && VISIBLE(CHAMPION_SELECT)) {
+		robot->updateScreenBuffer();
+	}
+}
+
+void clearChampionSelectSearchBox() {
+	LEFT_CLICK(CHAMPION_SELECT_SEARCH_BOX);
+	robot->ctrlPlusKeyClick('a', getRandomNumber(CLICK_DURATION_MIN_MILLISECONDS, CLICK_DURATION_MAX_MILLISECONDS));
+	robot->backspaceKeyClick(getRandomNumber(CLICK_DURATION_MIN_MILLISECONDS, CLICK_DURATION_MAX_MILLISECONDS));
+}
+
+void pickRandomChampion() {
+	//copy this func from the other bot
+}
+
+void pickChampion() {
+	//for now, it'll only be champions with a heal on W to simplify the in-game actions
+	std::array<std::string, 4> playableChampions = { "soraka", "sona", "seraphine", "nami" };
+
+	for (int index = 0; index < playableChampions.size(); index++) {
+		robot->updateScreenBuffer();
+		if (!VISIBLE(LOCK_IN_CHAMPION) && VISIBLE(ABLE_TO_PICK_CHAMPION)) {
+			LEFT_CLICK(CHAMPION_SELECT_SEARCH_BOX);
+
+			robot->keyClick(playableChampions.at(index).c_str(), getRandomNumber(CLICK_DURATION_MIN_MILLISECONDS, CLICK_DURATION_MAX_MILLISECONDS));
+
+			LEFT_CLICK(TOP_LEFT_CHAMPION_ICON);
+
+			clearChampionSelectSearchBox();
+		}
+		else {
+			//if a champion is locked in or champ select is dodged or every playable champion is tried, end loop
+			index = playableChampions.size();
+		}
+	}
+
+	robot->updateScreenBuffer();
+
+	//if every playable champ is banned, picked, or not owned, then pick a random one
+	while (!VISIBLE(LOCK_IN_CHAMPION) && VISIBLE(ABLE_TO_PICK_CHAMPION)) {
+		pickRandomChampion();
+		robot->updateScreenBuffer();
+	}
+}
+
+void setRunesAndSummonerSpells() {
+	LEFT_CLICK(RIOT_RECOMMENDED_RUNES_AND_SUMMONER_SPELLS);
+
+	robot->updateScreenBuffer();
+
+	if (VISIBLE(ALLOW_SUMMONER_SPELL_CHANGES)) {
+		LEFT_CLICK(ALLOW_SUMMONER_SPELL_CHANGES);
+	}
+
+	LEFT_CLICK(LEFT_RECOMMENDED_RUNES_AND_SUMMONER_SPELLS_OPTION);
+	//check if you need to exit the recc runes page after choosing an option
+}
+
 void championSelectActions() {
+	waitUntilBanPhase();
+	banNone();
+	waitUntilAbleToPickChampion();
+	pickChampion();
+	setRunesAndSummonerSpells();
 }
 
 
@@ -59,6 +139,14 @@ void buyItem(const char* ITEM_NAME) {
 
 	//close shop
 	robot->escapeKeyClick(getRandomNumber(CLICK_DURATION_MIN_MILLISECONDS, CLICK_DURATION_MAX_MILLISECONDS));
+}
+
+double getADCCurrentHealth() {
+	double health = 0.0;
+
+	//linear search adc health bar above minimap
+
+	return health;
 }
 
 double getCurrentHealth() {
@@ -161,8 +249,6 @@ void clientActions(bool& isNewGame) {
 		startNewGame();
 	}
 }
-
-
 
 int main()
 {

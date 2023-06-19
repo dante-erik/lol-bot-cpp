@@ -127,7 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="lol_leveling_bot.cpp" />
+    <ClCompile Include="RankedBot.cpp" />
     <ClCompile Include="Robot.cpp" />
     <ClInclude Include="Robot.hpp" />
   </ItemGroup>
