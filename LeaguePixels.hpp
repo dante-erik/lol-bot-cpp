@@ -5,11 +5,7 @@
 //if only an {x, y} point is given without an RGB, the pixel is never used for comparisons
 
 constexpr Pixel GAME_HUD{ {1331, 1060}, 138, 121, 74 };
-//green lit pixel on healthbar around 65% HP,
-//the LOW_HEALTH pixel became changed after 1 tower shot on ahri at lvl 3 at 7ish minutes
-constexpr Pixel LOW_HEALTH{ {980, 1030}, 11, 171, 11 };
-//actually only ~92% HP but the remaining 8% is regained while walking out of base
-constexpr Pixel FULL_HEALTH{ {1078, 1030}, 9, 194, 1 };
+constexpr Pixel SKILL_POINT{ {} };
 constexpr Pixel ALLY_BASE{ {1666, 1055} };
 constexpr Pixel ENEMY_NEXUS{ {1882, 844} };
 constexpr Pixel FIND_MATCH{ {847, 831}, 20, 62, 85 };
