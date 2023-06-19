@@ -25,7 +25,7 @@ constexpr int CLICK_DURATION_MIN_MILLISECONDS = 40;
 constexpr int MOUSE_INACCURACY_PIXELS = 2;
 
 //client lags after most actions. small indie company
-int CLIENT_LAG_MILLISECONDS = 4000;
+constexpr int CLIENT_LAG_MILLISECONDS = 4000;
 
 int getRandomNumber(const int& MIN, const int& MAX) {
 	//there are better ways to do this function
@@ -64,7 +64,7 @@ void pickRandomChampion() {
 
 void pickChampion() {
 	//for now, it'll only be champions with a heal on W to simplify the in-game actions
-	std::array<std::string, 4> playableChampions = { "soraka", "sona", "seraphine", "nami" };
+	const std::array<std::string, 4> playableChampions = { "soraka", "sona", "seraphine", "nami" };
 
 	for (int index = 0; index < playableChampions.size(); index++) {
 		robot->updateScreenBuffer();
@@ -190,7 +190,7 @@ void gameActions(bool& isNewGame) {
 	const double mana = getCurrentMana();
 
 	if (health > 0.30 && mana > 0.10) {
-		//follow ally
+		//follow ally, make sure to account for red vs blue side differences and anti-afk measures if the adc if afk
 		//randomly heal / shield them every 20-30 seconds
 		//attack enemies every 20-30 seconds
 	}
